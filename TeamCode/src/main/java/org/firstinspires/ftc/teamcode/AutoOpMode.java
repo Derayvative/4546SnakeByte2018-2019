@@ -110,9 +110,31 @@ public abstract class AutoOpMode extends LinearOpMode{
         return time.milliseconds();
     }
 
-    //TODO create basic movement methods, such as time-based, encoders, PID, etc.
+    //TODO: Create basic methods to set all motors to a certain power + stop the motors
 
-    //TODO create basic turning methods, such as time-based, PID, etc
+    //TODO: Create a basic time-based movement method
+
+    //TODO: Create a basic encoder-based movement method
+
+    //TODO: Create a Proportion-based encoder movement method
+
+    //TODO: Create a PI or PID-based movement method
+
+    //TODO: Create a basic time-based turning method
+
+    //TODO: Create a Proportion-based turning method
+
+    //TODO: Create a PI or PID-based turning method
+
+    //TODO: Create basic methods to manipulate the addition servos and motors
+
+    //TODO: Create an approach to detecting the gold. Some possibilities include Color Sensor, OpenCV, BitMaps
+
+    //TODO: Create basic code for range sensors
+
+    //TODO: Create range sensor based movement code
+
+    //TODO: Create a potential gyro-based movement code to finish in the crater
 
 
 }
