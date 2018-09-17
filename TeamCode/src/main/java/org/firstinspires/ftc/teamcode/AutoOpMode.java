@@ -95,6 +95,6 @@ public abstract class AutoOpMode extends LinearOpMode{
         Orientation angles = imu.getAngularOrientation();
         return (angles.firstAngle * -1);
     }
-    
+
 
 }
