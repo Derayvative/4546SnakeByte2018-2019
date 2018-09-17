@@ -22,6 +22,8 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //Non-Drive Train Motors
 
+    DcMotor intake;
+
     //Servos
 
     //Sensors
@@ -38,11 +40,14 @@ public abstract class AutoOpMode extends LinearOpMode{
     public void initialize() throws InterruptedException{
 
         //Drive Train Motors
+
         FL = hardwareMap.dcMotor.get("FL");
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
+
         //Configures the encoders for the motors
+
         FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -61,6 +66,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         initializeGyro();
 
         //Other Variables
+
         time.reset();
     }
 
@@ -95,6 +101,18 @@ public abstract class AutoOpMode extends LinearOpMode{
         Orientation angles = imu.getAngularOrientation();
         return (angles.firstAngle * -1);
     }
+
+    public void resetTimer() throws InterruptedException{
+        time.reset();
+    }
+
+    public double getTime() throws InterruptedException{
+        return time.milliseconds();
+    }
+
+    //TODO create basic movement methods, such as time-based, encoders, PID, etc.
+
+    //TODO create basic turning methods, such as time-based, PID, etc
 
 
 }
