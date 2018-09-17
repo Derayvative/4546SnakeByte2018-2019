@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class TrollBotTeleOp extends OpMode {
+public class TeleOpMode extends OpMode {
 
 
     //Declare Variables
@@ -14,7 +14,6 @@ public class TrollBotTeleOp extends OpMode {
 
     @Override
     public void init() {
-        //Initialize Variables, Hardware map
 
     }
 
