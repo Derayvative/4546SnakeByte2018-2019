@@ -41,7 +41,8 @@ public class BingoTeleOPtroll extends OpMode{
         BR = hardwareMap.dcMotor.get("BR");
 
         //Intake
-        IT = hardwareMap.dcMotor.get("IT");
+        //Commented out until Trollbot has an intake
+        //IT = hardwareMap.dcMotor.get("IT");
 
 
 
@@ -74,11 +75,16 @@ public class BingoTeleOPtroll extends OpMode{
 
         // Intake:
 
-        if (Math.abs(gamepad1.right_trigger) > .1) {
+        /*
+        if (gamepad1.right_trigger > 0.1) {
             IT.setPower(gamepad1.right_trigger);
-        } else {
-                IT.setPower(0);
+        } else if (gamepad1.left_trigger > 0.1){
+            IT.setPower(-gamepad1.left_trigger);
         }
+        else{
+            IT.setPower(0);
+        }
+        */
 
         // Half-speed:
 
