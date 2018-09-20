@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 // Luca test 9/20
-// LuCa TeSt 9/20
+// Luca's push 9/20
 @TeleOp
 public class BingoTeleOPtroll extends OpMode{
 
