@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 // Luca test 9/20
 // Luca's push 9/20
 // Luca's pushhhhhh 9/20
+// Landon 9/20
+
 @TeleOp
 public class BingoTeleOPtroll extends OpMode{
 
@@ -16,10 +19,15 @@ public class BingoTeleOPtroll extends OpMode{
 
     // DcMotors - Drive-train
 
+
     DcMotor FL;
     DcMotor FR;
     DcMotor BL;
     DcMotor BR;
+    Servo TeamMarker;
+    double servoPos;
+
+
 
     // DcMotors - Intake
     // (9/18: needs hardware-map on phone)
@@ -35,6 +43,7 @@ public class BingoTeleOPtroll extends OpMode{
 
         // dynamic variables:
 
+
         halfSpeed = false;
 
         //Drive-train
@@ -42,10 +51,12 @@ public class BingoTeleOPtroll extends OpMode{
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
+        TeamMarker = hardwareMap.servo.get("TeamMarker");
 
         //Intake
         //Commented out until Trollbot has an intake
         //IT = hardwareMap.dcMotor.get("IT");
+        servoPos = TeamMarker.getPosition();
 
 
 
@@ -56,6 +67,8 @@ public class BingoTeleOPtroll extends OpMode{
     // ======= Controls (as Tele-Op is running) =======
 
     public void loop() {
+
+
 
         // Drive-train:
 
@@ -75,6 +88,12 @@ public class BingoTeleOPtroll extends OpMode{
             BR.setPower(0);
         }
 
+        if (gamepad1.b){
+           TeamMarker.setPosition(servoPos + 30);
+
+        }else{
+            TeamMarker.setPosition(servoPos);
+        }
 
         // Intake:
 
