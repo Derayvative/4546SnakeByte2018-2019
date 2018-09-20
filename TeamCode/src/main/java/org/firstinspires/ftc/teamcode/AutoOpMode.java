@@ -41,7 +41,7 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //Initializes Motors, Servos, Sensors, etc when the robot is hanging
     public void initialize() throws InterruptedException{
-
+        time =  new ElapsedTime();
         //Drive Train Motors
 
         FL = hardwareMap.dcMotor.get("FL");
