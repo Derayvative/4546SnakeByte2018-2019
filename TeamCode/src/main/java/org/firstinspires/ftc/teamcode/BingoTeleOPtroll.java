@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.core.Mat;
-
 // Luca test 9/20
+// Luca's push 9/20
+// Luca's pushhhhhh 9/20
+// Landon 9/20
+
 @TeleOp
 public class BingoTeleOPtroll extends OpMode{
 
@@ -19,21 +19,19 @@ public class BingoTeleOPtroll extends OpMode{
 
     // DcMotors - Drive-train
 
+
     DcMotor FL;
     DcMotor FR;
     DcMotor BL;
     DcMotor BR;
+    Servo TeamMarker;
+    double servoPos;
+
+
 
     // DcMotors - Intake
     // (9/18: needs hardware-map on phone)
     DcMotor IT;
-
-    Servo teamMarkerPlacer;
-
-    ElapsedTime time = new ElapsedTime();
-
-    double xPressRecent;
-
 
     @Override
 
@@ -45,23 +43,23 @@ public class BingoTeleOPtroll extends OpMode{
 
         // dynamic variables:
 
-        halfSpeed = false;
 
-        xPressRecent = 0;
+        halfSpeed = false;
 
         //Drive-train
         FL = hardwareMap.dcMotor.get("FL");
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
+        TeamMarker = hardwareMap.servo.get("TeamMarker");
 
-        //tESTING TESTING
         //Intake
         //Commented out until Trollbot has an intake
         //IT = hardwareMap.dcMotor.get("IT");
+        servoPos = TeamMarker.getPosition();
 
 
-        time.reset();
+
     }
 
     @Override
@@ -69,6 +67,9 @@ public class BingoTeleOPtroll extends OpMode{
     // ======= Controls (as Tele-Op is running) =======
 
     public void loop() {
+
+
+
         // Drive-train:
 
         if (Math.abs(gamepad1.left_stick_y) > .1) {
@@ -86,10 +87,13 @@ public class BingoTeleOPtroll extends OpMode{
             FR.setPower(0);
             BR.setPower(0);
         }
-        if (gamepad1.x && time.milliseconds() - xPressRecent < 500){
 
+        if (gamepad1.b){
+           TeamMarker.setPosition(servoPos + 30);
+
+        }else{
+            TeamMarker.setPosition(servoPos);
         }
-
 
         // Intake:
 
