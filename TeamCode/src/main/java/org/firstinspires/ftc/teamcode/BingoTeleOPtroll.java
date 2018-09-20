@@ -3,6 +3,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.core.Mat;
 
 // Luca test 9/20
 @TeleOp
@@ -23,6 +28,13 @@ public class BingoTeleOPtroll extends OpMode{
     // (9/18: needs hardware-map on phone)
     DcMotor IT;
 
+    Servo teamMarkerPlacer;
+
+    ElapsedTime time = new ElapsedTime();
+
+    double xPressRecent;
+
+
     @Override
 
 
@@ -35,18 +47,21 @@ public class BingoTeleOPtroll extends OpMode{
 
         halfSpeed = false;
 
+        xPressRecent = 0;
+
         //Drive-train
         FL = hardwareMap.dcMotor.get("FL");
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
 
+        //tESTING TESTING
         //Intake
         //Commented out until Trollbot has an intake
         //IT = hardwareMap.dcMotor.get("IT");
 
 
-
+        time.reset();
     }
 
     @Override
@@ -54,7 +69,6 @@ public class BingoTeleOPtroll extends OpMode{
     // ======= Controls (as Tele-Op is running) =======
 
     public void loop() {
-
         // Drive-train:
 
         if (Math.abs(gamepad1.left_stick_y) > .1) {
@@ -71,6 +85,9 @@ public class BingoTeleOPtroll extends OpMode{
         } else {
             FR.setPower(0);
             BR.setPower(0);
+        }
+        if (gamepad1.x && time.milliseconds() - xPressRecent < 500){
+
         }
 
 

@@ -67,7 +67,7 @@ public abstract class AutoOpMode extends LinearOpMode{
 
         //Other Variables
 
-        time.reset();
+        resetTimer();
     }
 
     //Initializes Gyro, since in the actual game the gyro may need to be initialized after

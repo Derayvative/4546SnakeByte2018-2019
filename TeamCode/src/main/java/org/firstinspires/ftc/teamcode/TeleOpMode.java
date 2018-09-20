@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class TeleOpMode extends OpMode {
 
@@ -11,6 +12,8 @@ public class TeleOpMode extends OpMode {
     DcMotor FR;
     DcMotor BL;
     DcMotor BR;
+
+    ElapsedTime time;
 
     @Override
     public void init() {
