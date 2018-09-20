@@ -56,7 +56,7 @@ public class BingoTeleOPtroll extends OpMode{
         //Intake
         //Commented out until Trollbot has an intake
         //IT = hardwareMap.dcMotor.get("IT");
-        servoPos = TeamMarker.getPosition();
+        TeamMarker.setPosition(.7);
 
 
 
@@ -88,11 +88,11 @@ public class BingoTeleOPtroll extends OpMode{
             BR.setPower(0);
         }
 
-        if (gamepad1.b){
-           TeamMarker.setPosition(servoPos + 30);
+        if (gamepad1.b && (TeamMarker.getPosition() >= .65)){
+           TeamMarker.setPosition(.1);
 
-        }else{
-            TeamMarker.setPosition(servoPos);
+        }else if(gamepad1.b && (TeamMarker.getPosition() <= .15)){
+            TeamMarker.setPosition(.7);
         }
 
         // Intake:

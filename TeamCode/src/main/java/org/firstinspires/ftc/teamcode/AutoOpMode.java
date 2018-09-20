@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -26,6 +27,8 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //Servos
 
+    Servo TeamMarker;
+
     //Sensors
 
     BNO055IMU imu;
@@ -38,14 +41,14 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //Initializes Motors, Servos, Sensors, etc when the robot is hanging
     public void initialize() throws InterruptedException{
-
+        time =  new ElapsedTime();
         //Drive Train Motors
 
         FL = hardwareMap.dcMotor.get("FL");
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-
+        TeamMarker = hardwareMap.servo.get("TeamMarker");
         //Configures the encoders for the motors
 
         FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
