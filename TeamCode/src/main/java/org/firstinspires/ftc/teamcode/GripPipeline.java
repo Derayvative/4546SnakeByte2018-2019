@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.Surface;
+
+import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -30,6 +35,8 @@ public class GripPipeline {
     private Mat cvErodeOutput = new Mat();
     private Mat maskOutput = new Mat();
     private MatOfKeyPoint findBlobsOutput = new MatOfKeyPoint();
+
+    private Context context;
 
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -81,6 +88,8 @@ public class GripPipeline {
         findBlobs(findBlobsInput, findBlobsMinArea, findBlobsCircularity, findBlobsDarkBlobs, findBlobsOutput);
 
     }
+
+
 
     /**
      * This method is a generated getter for the output of a Resize_Image.
@@ -320,6 +329,7 @@ public class GripPipeline {
 
         blobDet.detect(input, blobList);
     }
+
 
 
 

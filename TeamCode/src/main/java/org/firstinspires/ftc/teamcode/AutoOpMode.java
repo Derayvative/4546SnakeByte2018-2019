@@ -8,7 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
+
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.opencv.android.CameraBridgeViewBase;
 
 public abstract class AutoOpMode extends LinearOpMode{
 
@@ -71,6 +74,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         //Other Variables
 
         resetTimer();
+        CameraBridgeViewBase rob;
     }
 
     //Initializes Gyro, since in the actual game the gyro may need to be initialized after
