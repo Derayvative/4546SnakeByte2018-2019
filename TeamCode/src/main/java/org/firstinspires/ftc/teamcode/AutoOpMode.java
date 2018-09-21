@@ -40,6 +40,11 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     ElapsedTime time; //returns time in s, ms, or ns since last reset
 
+    double currentGyro;
+    double previousGyro;
+    int gyroMultiplier;
+
+
     //Constants
 
     //Initializes Motors, Servos, Sensors, etc when the robot is hanging
@@ -74,7 +79,9 @@ public abstract class AutoOpMode extends LinearOpMode{
         //Other Variables
 
         resetTimer();
-        CameraBridgeViewBase rob;
+        previousGyro = 0;
+        currentGyro = 0;
+        gyroMultiplier = 0;
     }
 
     //Initializes Gyro, since in the actual game the gyro may need to be initialized after
@@ -93,7 +100,6 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     }
 
-    //TODO once the robot is up and running, test to see if these values (e.g. firstAngle) are accurate
     public double getGyroPitch() throws InterruptedException {
         Orientation angles = imu.getAngularOrientation();
         return (angles.secondAngle * -1);
@@ -117,7 +123,45 @@ public abstract class AutoOpMode extends LinearOpMode{
         return time.milliseconds();
     }
 
+    //Normally getGyroYaw() returns a value from between -180 to 180
+    //This leads to issues when you are near -180 or 180
+    //getFunctionalGyroYaw() effectively increases the range
+    //to -infinity to infinity as long as it is constantly being
+    //updated with gyro data
+    public double getFunctionalGyroYaw() throws InterruptedException{
+        previousGyro = currentGyro;
+        currentGyro = getGyroYaw();
+        if (previousGyro <= -160 && currentGyro > 160){
+            gyroMultiplier--;
+        }
+        if (currentGyro <= -160 && previousGyro > 160){
+            gyroMultiplier++;
+        }
+        return gyroMultiplier * 360 + getGyroYaw();
+    }
+
     //TODO: Create basic methods to set all motors to a certain power + stop the motors
+
+    public void setPower(double power) throws InterruptedException{
+        FL.setPower(-power);
+        FR.setPower(power);
+        BL.setPower(-power);
+        BR.setPower(power);
+    }
+
+    public void setZero() throws InterruptedException{
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
+    }
+
+    public void turn(double power) throws InterruptedException{
+        FL.setPower(power);
+        FR.setPower(power);
+        BL.setPower(power);
+        BR.setPower(power);
+    }
 
     //TODO: Create a basic time-based movement method
 
