@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.opencv.android.CameraBridgeViewBase;
+//import org.opencv.android.CameraBridgeViewBase;
 
 public abstract class AutoOpMode extends LinearOpMode{
 
