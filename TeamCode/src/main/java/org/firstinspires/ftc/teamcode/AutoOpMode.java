@@ -115,6 +115,22 @@ public abstract class AutoOpMode extends LinearOpMode{
         return (angles.firstAngle * -1);
     }
 
+    public int getAvgEncoder() throws InterruptedException {
+        return ( Math.abs(FL.getCurrentPosition()) + Math.abs(FR.getCurrentPosition()) +
+                Math.abs(BL.getCurrentPosition()) + Math.abs(BR.getCurrentPosition()) / 4 );
+    }
+
+
+    public void turn(double rotation, double angle) throws InterruptedException {
+        double first = getFunctionalGyroYaw();
+        while ((Math.abs(getFunctionalGyroYaw() - first) < angle) && (opModeIsActive())) {
+            turn(rotation);
+            idle();
+        }
+        setZero();
+    }
+
+
     public void resetTimer() throws InterruptedException{
         time.reset();
     }
@@ -163,9 +179,51 @@ public abstract class AutoOpMode extends LinearOpMode{
         BR.setPower(power);
     }
 
+
     //TODO: Create a basic time-based movement method
 
+    public void moveforTime(int time, double power) throws InterruptedException {
+
+        setPower(power);
+        sleep(time);
+        setZero();
+    }
+
+
     //TODO: Create a basic encoder-based movement method
+
+    // Move forward based off encoders
+    public void moveForwardEncoded(double power, int distance) throws InterruptedException {
+        int startPos = getAvgEncoder();
+        while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
+            setPower(power);
+            telemetry.addData("distance", getAvgEncoder() - startPos);
+            telemetry.update();
+            idle();
+        }
+        setZero();
+        if (Math.abs(getAvgEncoder() - startPos) > distance + 50) {
+            telemetry.addData("overshoot", "fix");
+            telemetry.update();
+        }
+    }
+
+
+    // Move backwards based off encoders
+    public void moveBackwardEncoded(double power, int distance) throws InterruptedException {
+        int startPos = getAvgEncoder();
+        while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
+            setPower(-power);
+            telemetry.addData("distance", getAvgEncoder() - startPos);
+            telemetry.update();
+            idle();
+        }
+        setZero();
+        if (Math.abs(getAvgEncoder() - startPos) > distance + 50) {
+            telemetry.addData("overshoot", "fix");
+            telemetry.update();
+        }
+    }
 
     //TODO: Create a Proportion-based encoder movement method
 
@@ -175,15 +233,7 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create a Proportion-based turning method
 
-    public void turn(double degreeTurned, double power) throws InterruptedException{
-        double startAngle = getFunctionalGyroYaw();
-        turn(power);
-        while (Math.abs(getFunctionalGyroYaw() - startAngle) < degreeTurned){
-            telemetry.addData("Angle", getFunctionalGyroYaw());
-            telemetry.update();
-        }
-        setPower(0);
-    }
+
 
     //TODO: Create a PI or PID-based turning method
 
