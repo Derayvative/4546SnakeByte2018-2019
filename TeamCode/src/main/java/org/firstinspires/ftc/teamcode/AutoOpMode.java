@@ -175,6 +175,16 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create a Proportion-based turning method
 
+    public void turn(double degreeTurned, double power) throws InterruptedException{
+        double startAngle = getFunctionalGyroYaw();
+        turn(power);
+        while (Math.abs(getFunctionalGyroYaw() - startAngle) < degreeTurned){
+            telemetry.addData("Angle", getFunctionalGyroYaw());
+            telemetry.update();
+        }
+        setPower(0);
+    }
+
     //TODO: Create a PI or PID-based turning method
 
     //TODO: Create basic methods to manipulate the addition servos and motors
