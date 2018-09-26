@@ -4,6 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_DOWN_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_UP_POSITION;
 
 // Luca test 9/20
 // Luca's push 9/20
@@ -26,6 +30,13 @@ public class BingoTeleOPtroll extends OpMode{
     DcMotor BR;
     Servo TeamMarker;
     double servoPos;
+
+    //Time-related variables
+    ElapsedTime time;
+    double mostRecentBPress;
+
+    //Constants
+
 
 
 
@@ -58,6 +69,11 @@ public class BingoTeleOPtroll extends OpMode{
         //IT = hardwareMap.dcMotor.get("IT");
         TeamMarker.setPosition(.7);
 
+        //Time-Related Variables
+        time = new ElapsedTime();
+        time.reset();
+        mostRecentBPress = 0;
+
 
 
     }
@@ -80,6 +96,7 @@ public class BingoTeleOPtroll extends OpMode{
             BL.setPower(0);
         }
 
+
         if (Math.abs(gamepad1.right_stick_y) > .1) {
             FR.setPower(-gamepad1.right_stick_y);
             BR.setPower(-gamepad1.right_stick_y);
@@ -88,11 +105,13 @@ public class BingoTeleOPtroll extends OpMode{
             BR.setPower(0);
         }
 
-        if (gamepad1.b && (TeamMarker.getPosition() >= .65)){
-           TeamMarker.setPosition(.1);
-
-        }else if(gamepad1.b && (TeamMarker.getPosition() <= .15)){
-            TeamMarker.setPosition(.7);
+        if (time.milliseconds() - mostRecentBPress > 500) {
+            if (gamepad1.b && (TeamMarker.getPosition() >= .65)) {
+                TeamMarker.setPosition(TEAM_MARKER_DOWN_POSITION);
+            } else if (gamepad1.b && (TeamMarker.getPosition() <= .15)) {
+                TeamMarker.setPosition(TEAM_MARKER_UP_POSITION);
+            }
+            mostRecentBPress = time.milliseconds();
         }
 
         // Intake:

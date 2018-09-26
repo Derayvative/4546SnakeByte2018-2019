@@ -182,7 +182,7 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create a basic time-based movement method
 
-    public void moveforTime(int time, double power) throws InterruptedException {
+    public void moveTime(int time, double power) throws InterruptedException {
 
         setPower(power);
         sleep(time);
@@ -193,7 +193,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     //TODO: Create a basic encoder-based movement method
 
     // Move forward based off encoders
-    public void moveForwardEncoded(double power, int distance) throws InterruptedException {
+    public void moveForwardEncoder(double power, int distance) throws InterruptedException {
         int startPos = getAvgEncoder();
         while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
             setPower(power);
@@ -210,7 +210,7 @@ public abstract class AutoOpMode extends LinearOpMode{
 
 
     // Move backwards based off encoders
-    public void moveBackwardEncoded(double power, int distance) throws InterruptedException {
+    public void moveBackwardEncoder(double power, int distance) throws InterruptedException {
         int startPos = getAvgEncoder();
         while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
             setPower(-power);

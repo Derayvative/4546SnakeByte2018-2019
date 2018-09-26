@@ -8,7 +8,7 @@ public class MovementTest extends AutoOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         waitForStart();
-        moveforTime(1000, .5);
+        moveTime(1000, .5);
 
     }
 }

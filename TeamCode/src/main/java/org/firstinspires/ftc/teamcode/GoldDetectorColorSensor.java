@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,12 +12,23 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import static org.firstinspires.ftc.teamcode.RobotConstants.GOLD_MEAN_BLUE;
+import static org.firstinspires.ftc.teamcode.RobotConstants.GOLD_MEAN_GREEN;
+import static org.firstinspires.ftc.teamcode.RobotConstants.GOLD_MEAN_RED;
+import static org.firstinspires.ftc.teamcode.RobotConstants.MINERAL_MEAN_BLUE;
+import static org.firstinspires.ftc.teamcode.RobotConstants.MINERAL_MEAN_GREEN;
+import static org.firstinspires.ftc.teamcode.RobotConstants.MINERAL_MEAN_RED;
+
 public class GoldDetectorColorSensor {
     //Color Sensor attached to the side of the drivetrain used to analyze the minerals + gold
     ColorSensor goldDetector;
+    float[] MineralHSV;
+    float[] GoldHSV;
 
-    public GoldDetectorColorSensor(ColorSensor cs) {
+    public GoldDetectorColorSensor(ColorSensor cs) throws InterruptedException {
         goldDetector = cs;
+        MineralHSV = getHSVArray(MINERAL_MEAN_RED, MINERAL_MEAN_GREEN, MINERAL_MEAN_BLUE);
+        GoldHSV = getHSVArray(GOLD_MEAN_RED, GOLD_MEAN_GREEN, GOLD_MEAN_BLUE);
     }
 
     private int[] analyzeSample() throws InterruptedException{
@@ -32,6 +44,7 @@ public class GoldDetectorColorSensor {
 
     public double[] collectYellowSample() throws InterruptedException{
 
+        ArrayList<Integer> Alpha = new ArrayList<>();
         ArrayList<Integer> Red = new ArrayList<>();
         ArrayList<Integer> Blue = new ArrayList<>();
         ArrayList<Integer> Green = new ArrayList<>();
@@ -39,12 +52,13 @@ public class GoldDetectorColorSensor {
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
         while (timer.milliseconds() < 15000){
+            Alpha.add(goldDetector.alpha());
             Red.add(goldDetector.red());
             Blue.add(goldDetector.blue());
             Green.add(goldDetector.green());
         }
 
-        double[] RGBAvg = {getAvg(Red), getAvg(Blue), getAvg(Green), getSTDDev(getAvg(Red), Red), getSTDDev(getAvg(Blue), Blue), getSTDDev(getAvg(Green), Green),};
+        double[] RGBAvg = {getAvg(Alpha),getAvg(Red), getAvg(Blue), getAvg(Green), getSTDDev(getAvg(Alpha),Alpha), getSTDDev(getAvg(Red), Red), getSTDDev(getAvg(Blue), Blue), getSTDDev(getAvg(Green), Green),};
         return RGBAvg;
     }
 
@@ -69,6 +83,45 @@ public class GoldDetectorColorSensor {
         }
         return Math.sqrt(total/count);
     }
+
+
+
+    public float[] getHSVArray(int r, int g, int b) throws InterruptedException{
+        float[] hsv = new float[3];
+        Color.RGBToHSV(r, g, b, hsv);
+        hsv[0] /= 360.0;
+        return hsv;
+    }
+
+    public double findHSVAvg() throws InterruptedException{
+        int count = 0;
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        double h = 0;
+        double s = 0;
+        double v = 0;
+        while (timer.milliseconds() < 15000){
+            h += getHSVArray(goldDetector.red(),goldDetector.blue(),goldDetector.green())[0];
+            s += getHSVArray(goldDetector.red(),goldDetector.blue(),goldDetector.green())[1];
+            v += getHSVArray(goldDetector.red(),goldDetector.blue(),goldDetector.green())[0];
+        }
+        return 0;
+    }
+
+    public String identifyGoldOrMineral(float[] hsv) throws InterruptedException{
+        double vectorSimilarityMineral = Math.sqrt(Math.pow(MineralHSV[0] - hsv[0],2)+ Math.pow(MineralHSV[1] - hsv[1],2) + Math.pow(MineralHSV[2] - hsv[2],2));
+        double vectorSimilarityGold = Math.sqrt(Math.pow(GoldHSV[0] - hsv[0],2)+ Math.pow(GoldHSV[1] - hsv[1],2) + Math.pow(GoldHSV[2] - hsv[2],2));
+        if (vectorSimilarityGold > vectorSimilarityMineral){
+            return "Mineral";
+        }
+        else if (vectorSimilarityMineral > vectorSimilarityGold){
+            return "Gold";
+        }
+        return null;
+    }
+
+
+
 
 
 
