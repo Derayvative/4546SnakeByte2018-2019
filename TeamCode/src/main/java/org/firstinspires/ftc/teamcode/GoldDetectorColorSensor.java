@@ -12,13 +12,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static org.firstinspires.ftc.teamcode.RobotConstants.GOLD_MEAN_BLUE;
-import static org.firstinspires.ftc.teamcode.RobotConstants.GOLD_MEAN_GREEN;
-import static org.firstinspires.ftc.teamcode.RobotConstants.GOLD_MEAN_RED;
-import static org.firstinspires.ftc.teamcode.RobotConstants.MINERAL_MEAN_BLUE;
-import static org.firstinspires.ftc.teamcode.RobotConstants.MINERAL_MEAN_GREEN;
-import static org.firstinspires.ftc.teamcode.RobotConstants.MINERAL_MEAN_RED;
+
 
 public class GoldDetectorColorSensor {
     //Color Sensor attached to the side of the drivetrain used to analyze the minerals + gold
@@ -28,8 +24,6 @@ public class GoldDetectorColorSensor {
 
     public GoldDetectorColorSensor(ColorSensor cs) throws InterruptedException {
         goldDetector = cs;
-        MineralHSV = getHSVArray(MINERAL_MEAN_RED, MINERAL_MEAN_GREEN, MINERAL_MEAN_BLUE);
-        GoldHSV = getHSVArray(GOLD_MEAN_RED, GOLD_MEAN_GREEN, GOLD_MEAN_BLUE);
     }
 
     private int[] analyzeSample() throws InterruptedException{
@@ -121,6 +115,8 @@ public class GoldDetectorColorSensor {
         return null;
 
     }
+
+
 
 
 

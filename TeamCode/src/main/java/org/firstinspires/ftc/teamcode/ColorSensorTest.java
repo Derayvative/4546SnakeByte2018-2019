@@ -19,22 +19,14 @@ public class ColorSensorTest extends LinearOpMode {
         GoldDetectorColorSensor goldFinder = new GoldDetectorColorSensor(CS);
 
         waitForStart();
-        /*telemetry.addData("Gold", Arrays.toString(goldFinder.collectYellowSample()));
-        telemetry.update();
-        sleep(5000);
-        telemetry.addData("Red", CS.red());
-        telemetry.addData("Blue", CS.blue());
-        telemetry.addData("Green", CS.green());
-        */
-        while (opModeIsActive()) {
-            /*
-            telemetry.addData("HSV", Arrays.toString(goldFinder.getHSVArray(CS.red(),CS.green(),CS.blue())));
-            telemetry.addData("Mineral", Arrays.toString(goldFinder.MineralHSV));
-            telemetry.addData("Mineral", Arrays.toString(goldFinder.GoldHSV));
-            telemetry.addData("Object", goldFinder.identifyGoldOrMineral(goldFinder.getHSVArray(CS.red(),CS.green(),CS.blue())));
-            telemetry.update();
-            */
 
+        while (opModeIsActive()) {
+            double[] RGB = {CS.red(), CS.green(), CS.blue()};
+            ColorSpaceConvertor.capRGB(RGB);
+            double[] CIELAB = ColorSpaceConvertor.RGVtoCIELAB(RGB);
+            telemetry.addData("Gold Similarity", ColorSpaceConvertor.CalculaeCIELABSimilarity(CIELAB, RobotConstants.GOLD_CIELAB_VALUES_CLOSE));
+            telemetry.addData("Mineral Similarity", ColorSpaceConvertor.CalculaeCIELABSimilarity(CIELAB, RobotConstants.MINERAL_CIELAB_VALUES_CLOSE));
+            telemetry.update();
             sleep(1000);
         }
     }

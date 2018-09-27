@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+    package org.firstinspires.ftc.teamcode;
 
 //Basic tool for experimentation with color sensor and potential CV
 //Meant to convert RGB color space into CIELAB color space
+// (although functionality for other color spaces can be added)
 //The problem with RGB color space is that it is difficult to
 //tell how similar 2 colors are based off of their RGB values
 //CIELAB color space more matches how the human eye detects
@@ -22,10 +23,10 @@ public final class ColorSpaceConvertor {
     //Colors RGB to XYZ color space (math and numbers here aren't really important to understand)
     //XYZ is basically the "Grand Central Station" of color space. It's easier to go
     // RGB  -> XYZ -> Other Color Space than RGB -> Other Color Space
-    public static double[] RGBtoXYZ(int[] RGB) throws InterruptedException{
-        double r = RGB[0];
-        double g = RGB[1];
-        double b = RGB[2];
+    public static double[] RGBtoXYZ(double[] RGB) throws InterruptedException{
+        double r = RGB[0]/255;
+        double g = RGB[1]/255;
+        double b = RGB[2]/255;
 
         if (r > 0.04045){
             r = Math.pow(((r + 0.055 ) / 1.055), 2.4);
@@ -70,22 +71,22 @@ public final class ColorSpaceConvertor {
         Z /= 1.08883;
 
         if ( X > 0.008856 ) {
-            X = Math.pow(X,1/3);
+            X = Math.pow(X,1.0/3);
         }
         else{
-            X = ( 7.787 * X ) + ( 16 / 116 );
+            X = ( 7.787 * X ) + ( 16.0 / 116 );
         }
         if ( Y > 0.008856 ){
-            Y = Math.pow(Y, 1/3);
+            Y = Math.pow(Y, 1.0/3);
         }
         else{
-            Y = ( 7.787 * Y ) + ( 16 / 116 );
+            Y = ( 7.787 * Y ) + ( 16.0 / 116 );
         }
         if ( Z > 0.008856 ) {
-            Z = Math.pow(Z, 1/3);
+            Z = Math.pow(Z, 1.0/3);
         }
         else{
-            Z = ( 7.787 * Z ) + ( 16 / 116 );
+            Z = ( 7.787 * Z ) + ( 16.0 / 116 );
         }
         double CIE_L = ( 116 * Y ) - 16;
         double CIE_a = 500 * (X - Y);
@@ -96,7 +97,7 @@ public final class ColorSpaceConvertor {
         return CIELAB;
     }
 
-    public double[] RGVtoCIELAB(int[] RGB) throws InterruptedException{
+    public static double[] RGVtoCIELAB(double[] RGB) throws InterruptedException{
         return XYZtoCIELAB(RGBtoXYZ(RGB));
     }
 
@@ -104,7 +105,26 @@ public final class ColorSpaceConvertor {
     //by finding (essentially) the vector difference between 2 CIELAB representations
     //A difference value of ~5 is considered a noticeable difference by an average person
     //A difference value of ~2.3 is considered noticeable for perceptive individuals
-    public double CalculaeCIELABSimilarity(double[] CIELAB1, double[] CIELAB2){
+    public static double CalculaeCIELABSimilarity(double[] CIELAB1, double[] CIELAB2){
         return Math.sqrt(Math.pow(CIELAB2[0] - CIELAB1[0],2) + Math.pow(CIELAB2[1] - CIELAB1[1],2) + Math.pow(CIELAB2[2] - CIELAB1[2],2));
     }
+
+    //Sometimes RGB color sensor is weird and returns values > 255
+    public static double[] capRGB(double[] RGB) throws InterruptedException{
+        if (RGB.length != 3){
+            return RGB;
+        }
+        if (RGB[0] > 255){
+            RGB[0] = 255;
+        }
+        if (RGB[1] > 255){
+            RGB[1] = 255;
+        }
+        if (RGB[2] > 255){
+            RGB[2] = 255;
+        }
+        return RGB;
+    }
+
+
 }

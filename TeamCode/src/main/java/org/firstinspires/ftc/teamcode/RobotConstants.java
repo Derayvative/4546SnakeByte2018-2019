@@ -12,16 +12,8 @@ public final class RobotConstants {
 
     //Color Sensor Constants
 
-    public static final int MINERAL_MEAN_RED = 88;
+    public static final double[] GOLD_CIELAB_VALUES_CLOSE = {140, 90, 50};
 
-    public static final int MINERAL_MEAN_GREEN = 71;
-
-    public static final int MINERAL_MEAN_BLUE = 82;
-
-    public static final int GOLD_MEAN_RED = 299;
-
-    public static final int GOLD_MEAN_GREEN = 99;
-
-    public static final int GOLD_MEAN_BLUE = 193;
+    public static final double[] MINERAL_CIELAB_VALUES_CLOSE = {150, 5, 20};
 
 }
