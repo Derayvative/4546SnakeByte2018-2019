@@ -9,6 +9,5 @@ public class MovementTest extends AutoOpMode {
         initialize();
         waitForStart();
         moveTime(1000, .5);
-
     }
 }
