@@ -9,6 +9,7 @@ package org.firstinspires.ftc.teamcode;
 
 //In CIELAB color space, L represents how white or black an object is
 //a represents how red or green and object is and b represents blue or yellow
+//A in-depth summary of the CIELAB color system can be found here: https://www.colourphil.co.uk/lab_lch_colour_space.shtml
 public final class ColorSpaceConvertor {
 
 
@@ -19,7 +20,7 @@ public final class ColorSpaceConvertor {
     }
 
     //Colors RGB to XYZ color space (math and numbers here aren't really important to understand)
-    //XYZ is basically the Grand Central Station of color space. It's easier to go
+    //XYZ is basically the "Grand Central Station" of color space. It's easier to go
     // RGB  -> XYZ -> Other Color Space than RGB -> Other Color Space
     public static double[] RGBtoXYZ(int[] RGB) throws InterruptedException{
         double r = RGB[0];
@@ -59,7 +60,7 @@ public final class ColorSpaceConvertor {
 
     //CIELAB is a way of identifying colors that is extremely suitable
     //for comparing the similarity between 2 colors
-    public static double[] XYZtoCIELAB(int[] XYZ) throws InterruptedException{
+    public static double[] XYZtoCIELAB(double[] XYZ) throws InterruptedException{
         double X = XYZ[0];
         double Y = XYZ[1];
         double Z = XYZ[2];
@@ -95,9 +96,14 @@ public final class ColorSpaceConvertor {
         return CIELAB;
     }
 
+    public double[] RGVtoCIELAB(int[] RGB) throws InterruptedException{
+        return XYZtoCIELAB(RGBtoXYZ(RGB));
+    }
+
     //CIELAB Color Space allows the perceivable difference to by calculated
     //by finding (essentially) the vector difference between 2 CIELAB representations
-    //A difference value of ~2.3 is considered a noticeable difference between 2 colors
+    //A difference value of ~5 is considered a noticeable difference by an average person
+    //A difference value of ~2.3 is considered noticeable for perceptive individuals
     public double CalculaeCIELABSimilarity(double[] CIELAB1, double[] CIELAB2){
         return Math.sqrt(Math.pow(CIELAB2[0] - CIELAB1[0],2) + Math.pow(CIELAB2[1] - CIELAB1[1],2) + Math.pow(CIELAB2[2] - CIELAB1[2],2));
     }
