@@ -12,7 +12,9 @@ package org.firstinspires.ftc.teamcode;
 public final class ColorSpaceConvertor {
 
 
-    public ColorSpaceConvertor(){
+    //No Argument private constructor prevents class from being initialized
+    //To use methods, type ColorSpaceConvert.methodName()
+    private ColorSpaceConvertor(){
 
     }
 
