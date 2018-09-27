@@ -18,6 +18,9 @@ public final class ColorSpaceConvertor {
 
     }
 
+    //Colors RGB to XYZ color space (math and numbers here aren't really important to understand)
+    //XYZ is basically the Grand Central Station of color space. It's easier to go
+    // RGB  -> XYZ -> Other Color Space than RGB -> Other Color Space
     public static double[] RGBtoXYZ(int[] RGB) throws InterruptedException{
         double r = RGB[0];
         double g = RGB[1];
@@ -52,5 +55,50 @@ public final class ColorSpaceConvertor {
 
         double[] XYZ = {X,Y,Z};
         return XYZ;
+    }
+
+    //CIELAB is a way of identifying colors that is extremely suitable
+    //for comparing the similarity between 2 colors
+    public static double[] XYZtoCIELAB(int[] XYZ) throws InterruptedException{
+        double X = XYZ[0];
+        double Y = XYZ[1];
+        double Z = XYZ[2];
+
+        X /= 0.95047;
+        Y /= 1.000;
+        Z /= 1.08883;
+
+        if ( X > 0.008856 ) {
+            X = Math.pow(X,1/3);
+        }
+        else{
+            X = ( 7.787 * X ) + ( 16 / 116 );
+        }
+        if ( Y > 0.008856 ){
+            Y = Math.pow(Y, 1/3);
+        }
+        else{
+            Y = ( 7.787 * Y ) + ( 16 / 116 );
+        }
+        if ( Z > 0.008856 ) {
+            Z = Math.pow(Z, 1/3);
+        }
+        else{
+            Z = ( 7.787 * Z ) + ( 16 / 116 );
+        }
+        double CIE_L = ( 116 * Y ) - 16;
+        double CIE_a = 500 * (X - Y);
+        double CIE_b = 200 * (Y - Z);
+
+        double[] CIELAB = {CIE_L, CIE_a, CIE_b};
+
+        return CIELAB;
+    }
+
+    //CIELAB Color Space allows the perceivable difference to by calculated
+    //by finding (essentially) the vector difference between 2 CIELAB representations
+    //A difference value of ~2.3 is considered a noticeable difference between 2 colors
+    public double CalculaeCIELABSimilarity(double[] CIELAB1, double[] CIELAB2){
+        return Math.sqrt(Math.pow(CIELAB2[0] - CIELAB1[0],2) + Math.pow(CIELAB2[1] - CIELAB1[1],2) + Math.pow(CIELAB2[2] - CIELAB1[2],2));
     }
 }
