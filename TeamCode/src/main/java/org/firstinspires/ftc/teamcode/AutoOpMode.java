@@ -233,6 +233,21 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create a Proportion-based turning method
 
+    public void pturn(double desired) throws InterruptedException {
+        double proximity;
+        if (desired > 0) {
+            while (Math.abs(getGyroYaw()) > desired) {
+                proximity = (Math.abs(getFunctionalGyroYaw()) - desired);
+                turn(proximity * .05 + .1);
+            }
+        } else {
+            while (Math.abs(getFunctionalGyroYaw()) < desired) {
+                proximity = (Math.abs(getFunctionalGyroYaw()) - desired);
+                turn(-proximity * .05 - .1);
+            }
+        }
+    }
+
 
 
     //TODO: Create a PI or PID-based turning method
@@ -247,5 +262,17 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create a potential gyro-based movement code to finish in the crater
 
+    public void resetTeamMarker() {
+        TeamMarker.setPosition(.7);
+    }
+    public void flickTeamMarker() {
+        TeamMarker.setPosition(.2);
+    }
+    //public void resetSampler(){
+    //    Sampler.setPosition(.2);
+    //}
+    //public void hitGold(){
+    //    Sampler.setPosition(.7);
+    //}
 
 }
