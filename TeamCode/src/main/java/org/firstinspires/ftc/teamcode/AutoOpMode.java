@@ -234,18 +234,20 @@ public abstract class AutoOpMode extends LinearOpMode{
     //TODO: Create a Proportion-based turning method
 
     public void pturn(double desired) throws InterruptedException {
-        double proximity;
+        double start = getFunctionalGyroYaw();
+        double proximity = Math.abs(desired);
         if (desired > 0) {
-            while (Math.abs(getGyroYaw()) > desired) {
-                proximity = (Math.abs(getFunctionalGyroYaw()) - desired);
-                turn(proximity * .05 + .1);
+            while (Math.abs(getFunctionalGyroYaw() - start) < desired) {
+                proximity = (Math.abs(getFunctionalGyroYaw() - desired));
+                turn(proximity * .0025 + .1);
             }
         } else {
-            while (Math.abs(getFunctionalGyroYaw()) < desired) {
+            while (Math.abs(getFunctionalGyroYaw()) - proximity < desired) {
                 proximity = (Math.abs(getFunctionalGyroYaw()) - desired);
-                turn(-proximity * .05 - .1);
+                turn(-proximity * .0025 - .1);
             }
         }
+        setZero();
     }
 
 
@@ -253,14 +255,6 @@ public abstract class AutoOpMode extends LinearOpMode{
     //TODO: Create a PI or PID-based turning method
 
     //TODO: Create basic methods to manipulate the addition servos and motors
-
-    //TODO: Create an approach to detecting the gold. Some possibilities include Color Sensor, OpenCV, BitMaps
-
-    //TODO: Create basic code for range sensors
-
-    //TODO: Create range sensor based movement code
-
-    //TODO: Create a potential gyro-based movement code to finish in the crater
 
     public void resetTeamMarker() {
         TeamMarker.setPosition(.7);
@@ -274,5 +268,15 @@ public abstract class AutoOpMode extends LinearOpMode{
     //public void hitGold(){
     //    Sampler.setPosition(.7);
     //}
+
+    //TODO: Create an approach to detecting the gold. Some possibilities include Color Sensor, OpenCV, BitMaps
+
+    //TODO: Create basic code for range sensors
+
+    //TODO: Create range sensor based movement code
+
+    //TODO: Create a potential gyro-based movement code to finish in the crater
+
+
 
 }
