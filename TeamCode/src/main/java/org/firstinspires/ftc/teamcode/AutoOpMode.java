@@ -167,9 +167,9 @@ public abstract class AutoOpMode extends LinearOpMode{
     //TODO: Create basic methods to set all motors to a certain power + stop the motors
 
     public void setPower(double power) throws InterruptedException{
-        FL.setPower(-power);
+        FL.setPower(-power * .87);
         FR.setPower(power);
-        BL.setPower(-power);
+        BL.setPower(-power * .87);
         BR.setPower(power);
     }
 
@@ -241,19 +241,30 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create a Proportion-based turning method
 
-    public void pturn(double desired) throws InterruptedException {
+    public void pRightTurn(double desired) throws InterruptedException {
         double start = getFunctionalGyroYaw();
         double proximity = Math.abs(desired);
-        if (desired > 0) {
-            while (Math.abs(getFunctionalGyroYaw() - start) < desired) {
-                proximity = (Math.abs(getFunctionalGyroYaw() - desired));
-                turn(-proximity * .0025 - .2);
-            }
-        } else {
-            while (Math.abs(getFunctionalGyroYaw()) - proximity < desired) {
-                proximity = (Math.abs(getFunctionalGyroYaw()) - desired);
-                turn(proximity * .0025 + .1);
-            }
+        while (Math.abs(getFunctionalGyroYaw() - start) < desired) {
+            proximity = (Math.abs(getFunctionalGyroYaw() - start - desired));
+            telemetry.addData("Proximity Value: ", proximity);
+            telemetry.addData("Turn value: ", -proximity * .0025 - .12);
+            telemetry.addData("Yaw Value:", getFunctionalGyroYaw());
+            telemetry.update();
+            turn(-proximity * .0025 - .12);
+        }
+        setZero();
+    }
+
+    public void pLeftTurn(double desired) throws InterruptedException {
+        double start = getFunctionalGyroYaw();
+        double proximity = Math.abs(desired);
+        while (Math.abs(getFunctionalGyroYaw() - start) < desired) {
+            proximity = Math.abs((Math.abs(getFunctionalGyroYaw() - start) - desired));
+            telemetry.addData("Proximity Value: ", proximity);
+            telemetry.addData("Turn value: ", proximity * .0025 + .12);
+            telemetry.addData("Yaw Value:", getFunctionalGyroYaw());
+            telemetry.update();
+            turn(proximity * .0025 + .12);
         }
         setZero();
     }
@@ -264,18 +275,9 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create basic methods to manipulate the addition servos and motors
 
-    public void resetTeamMarker() {
-        TeamMarker.setPosition(.7);
+    public void dropTeamMarker() {
+        
     }
-    public void flickTeamMarker() {
-        TeamMarker.setPosition(.2);
-    }
-    //public void resetSampler(){
-    //    Sampler.setPosition(.2);
-    //}
-    //public void hitGold(){
-    //    Sampler.setPosition(.7);
-    //}
 
     //TODO: Create an approach to detecting the gold. Some possibilities include Color Sensor, OpenCV, BitMaps
 

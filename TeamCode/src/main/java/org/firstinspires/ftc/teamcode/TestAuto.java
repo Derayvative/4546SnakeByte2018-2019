@@ -3,12 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
-public class GoldHitterTest extends AutoOpMode {
+public class TestAuto extends AutoOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
-        GoldDetectorColorSensor GD = new GoldDetectorColorSensor(CS, DS);
         waitForStart();
+        GoldDetectorColorSensor GD = new GoldDetectorColorSensor(CS,DS);
+        setPower(0.2);
+        sleep(800);
+        setZero();
+        pRightTurn(83);
+        sleep(300);
+        setZero();
         setPower(0.15);
         String objectSeen = "";
         while (!objectSeen.equals("GOLD_CLOSE") && !objectSeen.equals("GOLD_FAR") && opModeIsActive()){
@@ -32,6 +38,6 @@ public class GoldHitterTest extends AutoOpMode {
             idle();
         }
         setZero();
-        pRightTurn(360);
+        pLeftTurn(360);
     }
 }
