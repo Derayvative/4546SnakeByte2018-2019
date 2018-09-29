@@ -14,6 +14,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_DOWN_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_UP_POSITION;
+
 
 public abstract class AutoOpMode extends LinearOpMode{
 
@@ -275,8 +278,15 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create basic methods to manipulate the addition servos and motors
 
+    public void setTeamMarker() {
+        TeamMarker.setPosition(TEAM_MARKER_UP_POSITION);
+        telemetry.addData("TMarker Pos: ", TeamMarker.getPosition());
+        telemetry.update();
+    }
     public void dropTeamMarker() {
-        
+        TeamMarker.setPosition(TEAM_MARKER_DOWN_POSITION);
+        telemetry.addData("TMarker Pos: ", TeamMarker.getPosition());
+        telemetry.update();
     }
 
     //TODO: Create an approach to detecting the gold. Some possibilities include Color Sensor, OpenCV, BitMaps
