@@ -7,7 +7,10 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -19,11 +22,47 @@ import java.util.Arrays;
 public class GoldDetectorColorSensor {
     //Color Sensor attached to the side of the drivetrain used to analyze the minerals + gold
     ColorSensor goldDetector;
+    DistanceSensor goldDistanceSensor;
     float[] MineralHSV;
     float[] GoldHSV;
 
-    public GoldDetectorColorSensor(ColorSensor cs) throws InterruptedException {
+    public GoldDetectorColorSensor(ColorSensor cs, DistanceSensor csDistance) throws InterruptedException {
         goldDetector = cs;
+        goldDistanceSensor = csDistance;
+    }
+
+    public boolean isObjectInRange(){
+       if ((goldDistanceSensor.getDistance(DistanceUnit.CM) < 50)){
+           return true;
+       }
+       return false;
+    }
+
+    public String identifyObject() throws InterruptedException{
+        if (isObjectInRange()){
+            double[] RGB = {goldDetector.red(), goldDetector.green(), goldDetector.blue()};
+            ColorSpaceConvertor.capRGB(RGB);
+            double[] CIELAB = ColorSpaceConvertor.RGVtoCIELAB(RGB);
+
+            double GoldSimilarity =  ColorSpaceConvertor.CalculateCIELABSimilarity
+            (CIELAB, RobotConstants.GOLD_CIELAB_VALUES_CLOSE);
+
+            double MineralSimilarity = ColorSpaceConvertor.CalculateCIELABSimilarity
+            (CIELAB, RobotConstants.MINERAL_CIELAB_VALUES_CLOSE);
+
+
+            if (GoldSimilarity < MineralSimilarity){
+                return "GOLD_CLOSE";
+            }
+            else if (MineralSimilarity  < GoldSimilarity){
+                return "MINERAL_CLOSE";
+            }
+        }
+        return "NOTFOUND";
+    }
+
+    public double getRange() throws InterruptedException{
+        return goldDistanceSensor.getDistance(DistanceUnit.CM);
     }
 
     private int[] analyzeSample() throws InterruptedException{

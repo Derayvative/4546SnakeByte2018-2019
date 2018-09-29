@@ -8,7 +8,9 @@
 //CIELAB color space more matches how the human eye detects
 //similarities between colors
 
-//In CIELAB color space, L represents how white or black an object is
+    import android.opengl.Matrix;
+
+    //In CIELAB color space, L represents how white or black an object is
 //a represents how red or green and object is and b represents blue or yellow
 //A in-depth summary of the CIELAB color system can be found here: https://www.colourphil.co.uk/lab_lch_colour_space.shtml
 public final class ColorSpaceConvertor {
@@ -28,6 +30,7 @@ public final class ColorSpaceConvertor {
         double g = RGB[1]/255;
         double b = RGB[2]/255;
 
+
         if (r > 0.04045){
             r = Math.pow(((r + 0.055 ) / 1.055), 2.4);
         }
@@ -44,9 +47,11 @@ public final class ColorSpaceConvertor {
         if (g > 0.04045){
             g = Math.pow(((g + 0.055 ) / 1.055), 2.4);
         }
+
         else{
             g /= 12.92;
         }
+
         r *= 100;
         g *= 100;
         b *= 100;
@@ -58,6 +63,8 @@ public final class ColorSpaceConvertor {
         double[] XYZ = {X,Y,Z};
         return XYZ;
     }
+
+
 
     //CIELAB is a way of identifying colors that is extremely suitable
     //for comparing the similarity between 2 colors
@@ -105,7 +112,7 @@ public final class ColorSpaceConvertor {
     //by finding (essentially) the vector difference between 2 CIELAB representations
     //A difference value of ~5 is considered a noticeable difference by an average person
     //A difference value of ~2.3 is considered noticeable for perceptive individuals
-    public static double CalculaeCIELABSimilarity(double[] CIELAB1, double[] CIELAB2){
+    public static double CalculateCIELABSimilarity(double[] CIELAB1, double[] CIELAB2){
         return Math.sqrt(Math.pow(CIELAB2[0] - CIELAB1[0],2) + Math.pow(CIELAB2[1] - CIELAB1[1],2) + Math.pow(CIELAB2[2] - CIELAB1[2],2));
     }
 
@@ -125,6 +132,7 @@ public final class ColorSpaceConvertor {
         }
         return RGB;
     }
+
 
 
 }

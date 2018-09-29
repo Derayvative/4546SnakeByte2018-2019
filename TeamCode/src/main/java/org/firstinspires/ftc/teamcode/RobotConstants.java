@@ -12,8 +12,15 @@ public final class RobotConstants {
 
     //Color Sensor Constants
 
-    public static final double[] GOLD_CIELAB_VALUES_CLOSE = {140, 90, 50};
+    //public static final double[] GOLD_CIELAB_VALUES_CLOSE = {190, 80, 120};
+    public static final double[] GOLD_CIELAB_VALUES_CLOSE = {70, 15, 30};
 
-    public static final double[] MINERAL_CIELAB_VALUES_CLOSE = {150, 5, 20};
+
+    //public static final double[] MINERAL_CIELAB_VALUES_CLOSE = {200, 4, 32};
+    public static final double[] MINERAL_CIELAB_VALUES_CLOSE = {100, 0, 5};
+
+    public static final double[] GOLD_CIELAB_VALUES_FAR = {80, 30, 60};
+
+    public static final double[] MINERAL_CIELAB_VALUES_FAR = {200, 200, 200};
 
 }

@@ -4,7 +4,9 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -44,6 +46,9 @@ public abstract class AutoOpMode extends LinearOpMode{
     double previousGyro;
     int gyroMultiplier;
 
+    ColorSensor CS;
+    DistanceSensor DS;
+
 
     //Constants
 
@@ -77,6 +82,9 @@ public abstract class AutoOpMode extends LinearOpMode{
         initializeGyro();
 
         //Other Variables
+
+        CS = hardwareMap.colorSensor.get("goldDetector");
+        DS = hardwareMap.get(DistanceSensor.class, "goldDetector");
 
         resetTimer();
         previousGyro = 0;
@@ -239,12 +247,12 @@ public abstract class AutoOpMode extends LinearOpMode{
         if (desired > 0) {
             while (Math.abs(getFunctionalGyroYaw() - start) < desired) {
                 proximity = (Math.abs(getFunctionalGyroYaw() - desired));
-                turn(proximity * .0025 + .1);
+                turn(-proximity * .0025 - .2);
             }
         } else {
             while (Math.abs(getFunctionalGyroYaw()) - proximity < desired) {
                 proximity = (Math.abs(getFunctionalGyroYaw()) - desired);
-                turn(-proximity * .0025 - .1);
+                turn(proximity * .0025 + .1);
             }
         }
         setZero();
