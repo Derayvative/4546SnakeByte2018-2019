@@ -7,9 +7,17 @@ public class TurnTest extends AutoOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
+        setTeamMarker();
         waitForStart();
-        turn(90,0.5);
-        sleep(2000);
-        turn(720, 0.5);
+        moveToRangeStraighten(15,0);
+        pRightTurn(90);
+        moveToRangeStraighten(50, 90);
+        pRightTurn(180);
+        sleep(1000);
+        dropTeamMarker();
+        sleep(1000);
+        setTeamMarker();
+        setPower(0.5);
+        sleep(10000);
     }
 }

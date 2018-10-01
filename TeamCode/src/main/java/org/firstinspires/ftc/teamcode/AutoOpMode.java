@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Camera;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_DOWN_POSITION;
@@ -51,6 +54,7 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     ColorSensor CS;
     DistanceSensor DS;
+    ModernRoboticsI2cRangeSensor rangeSensor;
 
 
     //Constants
@@ -88,6 +92,7 @@ public abstract class AutoOpMode extends LinearOpMode{
 
         CS = hardwareMap.colorSensor.get("goldDetector");
         DS = hardwareMap.get(DistanceSensor.class, "goldDetector");
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
         resetTimer();
         previousGyro = 0;
@@ -322,7 +327,46 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create basic code for range sensors
 
+    public double getRangeReading() throws InterruptedException{
+        double reading = rangeSensor.getDistance(DistanceUnit.CM);
+        while (reading > 1000 || Double.isNaN(reading) && opModeIsActive()){
+            reading = rangeSensor.getDistance(DistanceUnit.CM);
+        }
+        return reading;
+    }
+
     //TODO: Create range sensor based movement code
+
+    public void moveToRange(double rangeCM) throws InterruptedException {
+        while (Math.abs(getRangeReading() - rangeCM) > 1.5){
+            double error = getRangeReading() - rangeCM;
+            if (error > 0){
+                setPower(0.1 + Math.abs(error) * 0.23/50);
+            }
+            else if (error < 0){
+                setPower(-0.2 - Math.abs(error) * 0.23/50);
+            }
+            telemetry.addData("Range", getRangeReading());
+            telemetry.update();
+        }
+        setPower(0);
+    }
+
+    public void moveToRangeStraighten(double rangeCM, double angle) throws InterruptedException {
+        while (Math.abs(getRangeReading() - rangeCM) > 1.5){
+            double error = getRangeReading() - rangeCM;
+            double angularCorrection = simpleStraighten(angle);
+            if (error > 0){
+                setPowerAndTurn(0.1 + Math.abs(error) * 0.23/50, angularCorrection);
+            }
+            else if (error < 0){
+                setPowerAndTurn(-0.2 - Math.abs(error) * 0.23/50, angularCorrection);
+            }
+            telemetry.addData("Range", getRangeReading());
+            telemetry.update();
+        }
+        setPower(0);
+    }
 
     //TODO: Create a potential gyro-based movement code to finish in the crater
 
