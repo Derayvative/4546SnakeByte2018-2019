@@ -13,14 +13,12 @@ public class TestTeamMarkerDrop extends AutoOpMode{
             waitForStart();
             setTeamMarker();
             pRightTurn(45);
-            sleep(300);
+            sleep(1000);
             setPower(-.2);
-            sleep(2500);
+            sleep(4000);
             dropTeamMarker();
-            sleep(300);
-            setPower(.2);
+            sleep(1000);
             setTeamMarker();
-            sleep(3000);
             setZero();
         }
     }

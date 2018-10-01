@@ -6,9 +6,9 @@ package org.firstinspires.ftc.teamcode;
 public final class RobotConstants {
 
     //Final variables cannot be changed
-    public static final double TEAM_MARKER_DOWN_POSITION = 0.1;
+    public static final double TEAM_MARKER_DOWN_POSITION = 1;
 
-    public static final double TEAM_MARKER_UP_POSITION = 0.7;
+    public static final double TEAM_MARKER_UP_POSITION = 0.1;
 
     //Color Sensor Constants
 

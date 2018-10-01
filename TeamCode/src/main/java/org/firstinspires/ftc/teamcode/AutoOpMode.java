@@ -132,7 +132,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     }
 
     public int getAvgEncoder() throws InterruptedException {
-        return ( ( Math.abs(BL.getCurrentPosition()) + Math.abs(BR.getCurrentPosition()) ) /2);
+        return ( ( Math.abs(FL.getCurrentPosition()) + Math.abs(FR.getCurrentPosition()) ) /2);
     }
 
 
@@ -242,6 +242,23 @@ public abstract class AutoOpMode extends LinearOpMode{
         while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
             setPower(power);
             telemetry.addData("distance", getAvgEncoder() - startPos);
+            telemetry.update();
+            idle();
+        }
+        setZero();
+        if (Math.abs(getAvgEncoder() - startPos) > distance + 50) {
+            telemetry.addData("overshoot", "fix");
+            telemetry.update();
+        }
+    }
+
+    public void pMoveForward(int distance) throws InterruptedException {
+        int startPos = getAvgEncoder();
+        while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
+            int distanceAway = Math.abs(distance - Math.abs(getAvgEncoder() - startPos));
+            setPower(distanceAway * .0005 + .05);
+            telemetry.addData("distance", Math.abs(distanceAway - Math.abs(getAvgEncoder() - startPos)));
+            telemetry.addData("Power", distanceAway * .0005 + .005);
             telemetry.update();
             idle();
         }

@@ -67,7 +67,7 @@ public class BingoTeleOPtroll extends OpMode{
         //Intake
         //Commented out until Trollbot has an intake
         //IT = hardwareMap.dcMotor.get("IT");
-        TeamMarker.setPosition(.7);
+        TeamMarker.setPosition(TEAM_MARKER_UP_POSITION);
 
         //Time-Related Variables
         time = new ElapsedTime();
@@ -106,9 +106,9 @@ public class BingoTeleOPtroll extends OpMode{
         }
 
         if (time.milliseconds() - mostRecentBPress > 500) {
-            if (gamepad1.b && (TeamMarker.getPosition() >= .65)) {
+            if (gamepad1.b && (TeamMarker.getPosition() <= .15)) {
                 TeamMarker.setPosition(TEAM_MARKER_DOWN_POSITION);
-            } else if (gamepad1.b && (TeamMarker.getPosition() <= .15)) {
+            } else if (gamepad1.b && (TeamMarker.getPosition() >= .65)) {
                 TeamMarker.setPosition(TEAM_MARKER_UP_POSITION);
             }
             mostRecentBPress = time.milliseconds();
