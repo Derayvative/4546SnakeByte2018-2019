@@ -41,6 +41,6 @@ public class TestAuto extends AutoOpMode {
             idle();
         }
         setZero();
-        moveForwardEncoder(.1, 500);
+
     }
 }

@@ -132,8 +132,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     }
 
     public int getAvgEncoder() throws InterruptedException {
-        return ( Math.abs(FL.getCurrentPosition()) + Math.abs(FR.getCurrentPosition()) +
-                Math.abs(BL.getCurrentPosition()) + Math.abs(BR.getCurrentPosition()) / 4 );
+        return ( ( Math.abs(BL.getCurrentPosition()) + Math.abs(BR.getCurrentPosition()) ) /2);
     }
 
 
