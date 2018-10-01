@@ -17,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static java.lang.Double.isNaN;
 
 
 public class GoldDetectorColorSensor {
@@ -32,7 +33,8 @@ public class GoldDetectorColorSensor {
     }
 
     public boolean isObjectInRange(){
-       if ((goldDistanceSensor.getDistance(DistanceUnit.CM) < 50)){
+        double distance = goldDistanceSensor.getDistance(DistanceUnit.CM);
+       if ((distance < 10.5) && (!isNaN(distance))){
            return true;
        }
        return false;

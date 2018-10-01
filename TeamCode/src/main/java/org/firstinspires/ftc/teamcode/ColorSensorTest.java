@@ -41,7 +41,10 @@ public class ColorSensorTest extends LinearOpMode {
             telemetry.addData("Mineral Similarity", ColorSpaceConvertor.CalculateCIELABSimilarity(CIELAB, RobotConstants.MINERAL_CIELAB_VALUES_CLOSE));
             telemetry.addData("Gold Similarity Far", ColorSpaceConvertor.CalculateCIELABSimilarity(CIELAB, RobotConstants.GOLD_CIELAB_VALUES_FAR));
             telemetry.addData("Mineral Similarity Far", ColorSpaceConvertor.CalculateCIELABSimilarity(CIELAB, RobotConstants.MINERAL_CIELAB_VALUES_FAR));
-            telemetry.addData("OBJECT", goldFinder.identifyObject());
+            telemetry.addData("Range", goldFinder.getRange());
+            if (goldFinder.getRange() <= 6.5){
+                telemetry.addData("OBJECT", goldFinder.identifyObject());
+            }
             telemetry.update();
             sleep(300);
         }

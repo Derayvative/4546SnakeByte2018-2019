@@ -113,7 +113,7 @@ public final class ColorSpaceConvertor {
     //A difference value of ~5 is considered a noticeable difference by an average person
     //A difference value of ~2.3 is considered noticeable for perceptive individuals
     public static double CalculateCIELABSimilarity(double[] CIELAB1, double[] CIELAB2){
-        return Math.sqrt(Math.pow(CIELAB2[0] - CIELAB1[0],2) + Math.pow(CIELAB2[1] - CIELAB1[1],2) + Math.pow(CIELAB2[2] - CIELAB1[2],2));
+        return Math.sqrt(Math.pow(CIELAB2[0] - CIELAB1[0],2) + Math.pow(CIELAB2[1] - 4*CIELAB1[1],2) + Math.pow(CIELAB2[2] - CIELAB1[2],2));
     }
 
     //Sometimes RGB color sensor is weird and returns values > 255

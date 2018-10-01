@@ -176,6 +176,35 @@ public abstract class AutoOpMode extends LinearOpMode{
         BR.setPower(power);
     }
 
+    public void setPowerAndTurn(double power, double turn) throws InterruptedException{
+        FL.setPower(-power + turn);
+        FR.setPower(power + turn);
+        BL.setPower(-power + turn);
+        BR.setPower(power + turn);
+    }
+
+    public double findAnglularPositionError(double desiredAngle) throws InterruptedException{
+        return getFunctionalGyroYaw() - desiredAngle;
+    }
+
+    public double simpleStraighten(double desiredAngle) throws InterruptedException{
+        double error = findAnglularPositionError(desiredAngle);
+        return error * 0.05;
+    }
+
+    public void moveForwardStraight(double power, double desiredAngle, int timeMS) throws InterruptedException{
+        setPower(power);
+        double startTime = time.milliseconds();
+        while (time.milliseconds() - startTime < timeMS){
+            double correctionalTurn = simpleStraighten(desiredAngle);
+            setPowerAndTurn(power, correctionalTurn);
+            telemetry.addData("ANgle", getFunctionalGyroYaw());
+            telemetry.update();
+        }
+        setZero();
+    }
+
+
     public void setZero() throws InterruptedException{
         FL.setPower(0);
         FR.setPower(0);
