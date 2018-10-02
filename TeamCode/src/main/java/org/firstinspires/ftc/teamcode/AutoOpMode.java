@@ -368,6 +368,69 @@ public abstract class AutoOpMode extends LinearOpMode{
         setPower(0);
     }
 
+    public void moveToRangePI(double rangeCM) throws InterruptedException {
+        double kP = 0.23/70;
+        double kI = 0.000003;
+        double currentTime = System.currentTimeMillis();
+        double pastTime;
+        double time = 0;
+        double numCalcs = 0;
+        double riemannSumError = 0;
+        while (Math.abs(getRangeReading() - rangeCM) > 1.5 && opModeIsActive()){
+            double error = getRangeReading() - rangeCM;
+            pastTime = currentTime;
+            currentTime = System.currentTimeMillis();
+            double deltaT = currentTime - pastTime;
+            time += deltaT;
+            telemetry.addData("Time", time / 1000.0);
+            numCalcs++;
+            telemetry.addData("Count", numCalcs);
+            riemannSumError += deltaT * Math.abs(error);
+            telemetry.addData("I Term", riemannSumError * kI);
+            if (error > 0){
+                setPower(0.1 + Math.abs(error) * 0.23/60 + riemannSumError * kI);
+            }
+            else if (error < 0){
+                setPower(-0.1 - Math.abs(error) * 0.23/60 - riemannSumError * kI);
+            }
+            telemetry.addData("Range", getRangeReading());
+            telemetry.update();
+        }
+        setPower(0);
+    }
+
+    public void moveToRangePIStraighten(double rangeCM, double angle) throws InterruptedException {
+        double kP = 0.23/70;
+        double kI = 0.000003;
+        double currentTime = System.currentTimeMillis();
+        double pastTime;
+        double time = 0;
+        double numCalcs = 0;
+        double riemannSumError = 0;
+        while (Math.abs(getRangeReading() - rangeCM) > 1.5 && opModeIsActive()){
+            double error = getRangeReading() - rangeCM;
+            double angularCorrection = simpleStraighten(angle);
+            pastTime = currentTime;
+            currentTime = System.currentTimeMillis();
+            double deltaT = currentTime - pastTime;
+            time += deltaT;
+            telemetry.addData("Time", time / 1000.0);
+            numCalcs++;
+            telemetry.addData("Count", numCalcs);
+            riemannSumError += deltaT * Math.abs(error);
+            telemetry.addData("I Term", riemannSumError * kI);
+            if (error > 0.5){
+                setPowerAndTurn(0.1 + Math.abs(error) * 0.23/60 + riemannSumError * kI, angularCorrection);
+            }
+            else if (error < -0.5){
+                setPowerAndTurn(-0.1 - Math.abs(error) * 0.23/60 - riemannSumError * kI, angularCorrection);
+            }
+            telemetry.addData("Range", getRangeReading());
+            telemetry.update();
+        }
+        setPower(0);
+    }
+
     public void moveToRangeStraighten(double rangeCM, double angle) throws InterruptedException {
         while (Math.abs(getRangeReading() - rangeCM) > 1.5){
             double error = getRangeReading() - rangeCM;

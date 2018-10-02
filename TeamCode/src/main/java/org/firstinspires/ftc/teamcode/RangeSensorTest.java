@@ -8,7 +8,7 @@ public class RangeSensorTest extends AutoOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         waitForStart();
-        moveToRangeStraighten(45, 0);
-        moveToRangeStraighten(100, 0);
+        moveToRangePIStraighten(45, 0);
+
     }
 }
