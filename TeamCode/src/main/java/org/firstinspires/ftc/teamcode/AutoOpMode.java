@@ -372,11 +372,11 @@ public abstract class AutoOpMode extends LinearOpMode{
         while (Math.abs(getRangeReading() - rangeCM) > 1.5){
             double error = getRangeReading() - rangeCM;
             double angularCorrection = simpleStraighten(angle);
-            if (error > 0){
+            if (error > 1){
                 setPowerAndTurn(0.1 + Math.abs(error) * 0.23/50, angularCorrection);
             }
-            else if (error < 0){
-                setPowerAndTurn(-0.2 - Math.abs(error) * 0.23/50, angularCorrection);
+            else if (error < -1){
+                setPowerAndTurn(-0.1 - Math.abs(error) * 0.23/50, angularCorrection);
             }
             telemetry.addData("Range", getRangeReading());
             telemetry.update();

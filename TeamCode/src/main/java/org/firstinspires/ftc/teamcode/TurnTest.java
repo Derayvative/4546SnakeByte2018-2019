@@ -12,11 +12,12 @@ public class TurnTest extends AutoOpMode {
         moveToRangeStraighten(15,0);
         pRightTurn(90);
         moveToRangeStraighten(50, 90);
-        pRightTurn(180);
+        pRightTurn(135);
         sleep(1000);
         dropTeamMarker();
         sleep(1000);
         setTeamMarker();
+        pRightTurn(45);
         setPower(0.5);
         sleep(10000);
     }
