@@ -132,7 +132,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     }
 
     public int getAvgEncoder() throws InterruptedException {
-        return ( ( Math.abs(FL.getCurrentPosition()) + Math.abs(FR.getCurrentPosition()) ) /2);
+        return ( ( Math.abs(BL.getCurrentPosition()) + Math.abs(BR.getCurrentPosition()) ) /2);
     }
 
 
@@ -237,6 +237,27 @@ public abstract class AutoOpMode extends LinearOpMode{
     //TODO: Create a basic encoder-based movement method
 
     // Move forward based off encoders
+
+
+
+    public void pMoveForward(int distance) throws InterruptedException {
+        int startPos = getAvgEncoder();
+        while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
+            int distanceAway = Math.abs(distance - Math.abs(getAvgEncoder() - startPos));
+            setPower(distanceAway * .0005 + .12);
+            telemetry.addData("distance", Math.abs(distanceAway - Math.abs(getAvgEncoder() - startPos)));
+            telemetry.addData("Power", distanceAway * .0005 + .12);
+            telemetry.update();
+            idle();
+        }
+        setZero();
+        if (Math.abs(getAvgEncoder() - startPos) > distance + 50) {
+            telemetry.addData("overshoot", "fix");
+            telemetry.update();
+        }
+    }
+
+    // Move forwards based off encoders
     public void moveForwardEncoder(double power, int distance) throws InterruptedException {
         int startPos = getAvgEncoder();
         while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
@@ -251,24 +272,6 @@ public abstract class AutoOpMode extends LinearOpMode{
             telemetry.update();
         }
     }
-
-    public void pMoveForward(int distance) throws InterruptedException {
-        int startPos = getAvgEncoder();
-        while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
-            int distanceAway = Math.abs(distance - Math.abs(getAvgEncoder() - startPos));
-            setPower(distanceAway * .0005 + .05);
-            telemetry.addData("distance", Math.abs(distanceAway - Math.abs(getAvgEncoder() - startPos)));
-            telemetry.addData("Power", distanceAway * .0005 + .05);
-            telemetry.update();
-            idle();
-        }
-        setZero();
-        if (Math.abs(getAvgEncoder() - startPos) > distance + 50) {
-            telemetry.addData("overshoot", "fix");
-            telemetry.update();
-        }
-    }
-
 
     // Move backwards based off encoders
     public void moveBackwardEncoder(double power, int distance) throws InterruptedException {
