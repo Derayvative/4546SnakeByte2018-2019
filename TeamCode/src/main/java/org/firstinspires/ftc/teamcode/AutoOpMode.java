@@ -258,7 +258,7 @@ public abstract class AutoOpMode extends LinearOpMode{
             int distanceAway = Math.abs(distance - Math.abs(getAvgEncoder() - startPos));
             setPower(distanceAway * .0005 + .05);
             telemetry.addData("distance", Math.abs(distanceAway - Math.abs(getAvgEncoder() - startPos)));
-            telemetry.addData("Power", distanceAway * .0005 + .005);
+            telemetry.addData("Power", distanceAway * .0005 + .05);
             telemetry.update();
             idle();
         }
