@@ -10,5 +10,7 @@ public class Test_pMoveForward extends AutoOpMode {
         initialize();
         waitForStart();
         pMoveForward(1000);
+        sleep(1000);
+        pMoveForward(1000);
     }
 }
