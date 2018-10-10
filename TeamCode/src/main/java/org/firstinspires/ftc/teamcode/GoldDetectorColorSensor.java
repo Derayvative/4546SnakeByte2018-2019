@@ -157,6 +157,25 @@ public class GoldDetectorColorSensor {
 
     }
 
+    public double identifyLeastSimilarSample(double[] sample1, double[] sample2, double[] sample3){
+
+        double similarity12 = ColorSpaceConvertor.CalculateCIELABSimilarity(sample1, sample2);
+        double similarity23 = ColorSpaceConvertor.CalculateCIELABSimilarity(sample3, sample2);
+        double similarity13 = ColorSpaceConvertor.CalculateCIELABSimilarity(sample1, sample3);
+
+        if (similarity12 < similarity23 && similarity12 < similarity13){
+            return 3;
+        }
+        if (similarity23 < similarity13 && similarity23 < similarity12){
+            return 1;
+        }
+        if (similarity13 < similarity23 && similarity13 < similarity12){
+            return 2;
+        }
+        return 0;
+
+    }
+
 
 
 

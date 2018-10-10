@@ -89,8 +89,8 @@ public class TeleOpMode extends OpMode{
         // Drive-train:
 
         if (Math.abs(gamepad1.left_stick_y) > .1) {
-            FL.setPower(-gamepad1.left_stick_y * halfSpeed);
-            BL.setPower(-gamepad1.left_stick_y * halfSpeed);
+            FL.setPower(gamepad1.left_stick_y * halfSpeed);
+            BL.setPower(gamepad1.left_stick_y * halfSpeed);
         } else {
             FL.setPower(0);
             BL.setPower(0);
@@ -98,14 +98,14 @@ public class TeleOpMode extends OpMode{
 
 
         if (Math.abs(gamepad1.right_stick_y) > .1) {
-            FR.setPower(gamepad1.right_stick_y * halfSpeed);
-            BR.setPower(gamepad1.right_stick_y * halfSpeed);
+            FR.setPower(-gamepad1.right_stick_y * halfSpeed);
+            BR.setPower(-gamepad1.right_stick_y * halfSpeed);
         } else {
             FR.setPower(0);
             BR.setPower(0);
         }
 
-        if (time.milliseconds() - mostRecentBPress > 200) {
+        if (time.milliseconds() - mostRecentBPress > 100) {
             if (gamepad1.b && (halfSpeed == 1)) {
                 halfSpeed = 0.5;
             } else if ((gamepad1.b) && (halfSpeed == 0.5)) {

@@ -208,6 +208,29 @@ public abstract class AutoOpMode extends LinearOpMode{
         setZero();
     }
 
+    public void moveForwardStraightUntilObjectDetected(double power, double desiredAngle, int maxTimeMS) throws InterruptedException{
+        setPower(power);
+        double startTime = time.milliseconds();
+        while (time.milliseconds() - startTime < maxTimeMS && !(DS.getDistance(DistanceUnit.CM) <= 12) && opModeIsActive()){
+            double correctionalTurn = simpleStraighten(desiredAngle);
+            setPowerAndTurn(power, correctionalTurn);
+            telemetry.addData("Angle", getFunctionalGyroYaw());
+            telemetry.update();
+        }
+
+        setZero();
+    }
+
+    public void alignWithSample() throws InterruptedException{
+        if (DS.getDistance(DistanceUnit.CM) >= 12 && opModeIsActive()){
+            while (DS.getDistance(DistanceUnit.CM) >= 12 && opModeIsActive()){
+                setPower(-0.12);
+            }
+            setZero();
+        }
+
+    }
+
 
     public void setZero() throws InterruptedException{
         FL.setPower(0);
@@ -306,7 +329,7 @@ public abstract class AutoOpMode extends LinearOpMode{
             telemetry.addData("Turn value: ", -proximity * .0025 - .12);
             telemetry.addData("Yaw Value:", getFunctionalGyroYaw());
             telemetry.update();
-            turn(-proximity * .0025 - .12);
+            turn(-proximity * .0025 - .16);
         }
         setZero();
     }
@@ -320,7 +343,7 @@ public abstract class AutoOpMode extends LinearOpMode{
             telemetry.addData("Turn value: ", proximity * .0025 + .12);
             telemetry.addData("Yaw Value:", getFunctionalGyroYaw());
             telemetry.update();
-            turn(proximity * .0025 + .12);
+            turn(proximity * .0025 + .16);
         }
         setZero();
     }
@@ -452,6 +475,53 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //TODO: Create a potential gyro-based movement code to finish in the crater
 
+
+
+
+    //Most likely not for drivetrain usage
+    public void setConstantSpeed(DcMotor motor, double encoderPerSec) throws InterruptedException {
+        double currentEnc = motor.getCurrentPosition();
+        double pastEnc;
+        double pastTime;
+        double time = 0;
+        double error;
+        double count = 0;
+        double totalSpeed = 0;
+        double currentTime = System.currentTimeMillis();
+        double power = -getCubicApproximationOfPower(encoderPerSec);
+        telemetry.addData("Power", power);
+        telemetry.update();
+        sleep(3000);
+        setPower(power);
+        sleep(1000);
+        while (opModeIsActive()){
+            setPower(power);
+            pastEnc = currentEnc;
+            currentEnc = motor.getCurrentPosition();
+            pastTime = currentTime;
+            currentTime = System.currentTimeMillis();
+            double deltaT = currentTime - pastTime;
+            time += deltaT;
+            double speed = (currentEnc - pastEnc) / (deltaT/1000);
+            totalSpeed += speed;
+            count++;
+            telemetry.addData("Time", time);
+            telemetry.addData("Speed", speed);
+            telemetry.addData("Power", power);
+            telemetry.addData("Average Speed", totalSpeed/count);
+            telemetry.update();
+            sleep(200);
+            error = speed - encoderPerSec;
+            power = power + 0.0000065 * error;
+
+        }
+    }
+
+    public double getCubicApproximationOfPower(double encoderpersec) throws InterruptedException{
+        double x = encoderpersec;
+        double approximatePower = 0.000000000116180 * Math.pow(x,3) - 0.000000372409239 * Math.pow(x,2) + 0.000447364393957 * x - 0.011674613712852;
+        return approximatePower;
+    }
 
 
 }
