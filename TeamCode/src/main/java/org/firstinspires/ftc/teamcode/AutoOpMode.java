@@ -280,6 +280,23 @@ public abstract class AutoOpMode extends LinearOpMode{
         }
     }
 
+    public void pMoveBackward(int distance) throws InterruptedException {
+        int startPos = getAvgEncoder();
+        while ((Math.abs(getAvgEncoder() - startPos) < distance) && (opModeIsActive())) {
+            int distanceAway = Math.abs(distance - Math.abs(getAvgEncoder() - startPos));
+            setPower(-distanceAway * .0005 - .12);
+            telemetry.addData("distance", Math.abs(distanceAway - Math.abs(getAvgEncoder() - startPos)));
+            telemetry.addData("Power", distanceAway * .0005 - .12);
+            telemetry.update();
+            idle();
+        }
+        setZero();
+        if (Math.abs(getAvgEncoder() - startPos) > distance + 50) {
+            telemetry.addData("overshoot", "fix");
+            telemetry.update();
+        }
+    }
+
     // Move forwards based off encoders
     public void moveForwardEncoder(double power, int distance) throws InterruptedException {
         int startPos = getAvgEncoder();
