@@ -24,6 +24,7 @@ public class ColorSensorTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            //test
             /*
             double[] RGB = {CS.red(), CS.green(), CS.blue()};
             ColorSpaceConvertor.capRGB(RGB);
