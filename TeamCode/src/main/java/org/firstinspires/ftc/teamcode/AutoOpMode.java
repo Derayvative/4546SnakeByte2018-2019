@@ -499,24 +499,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         setPower(0);
     }
 
-    public void turnToPosition(double angleGoal) throws InterruptedException {
-
-        double initial = getFunctionalGyroYaw();
-        if (initial < angleGoal) {
-            pRightTurn(Math.abs(angleGoal - initial);
-
-            }
-
-
-            else if (initial > angleGoal) {
-                    pLeftTurn(Math.abs(initial - angleGoal));
-                }
-
-            }
-
-        }
-    }
-
+    
     //TODO: Create a potential gyro-based movement code to finish in the crater
 
 
