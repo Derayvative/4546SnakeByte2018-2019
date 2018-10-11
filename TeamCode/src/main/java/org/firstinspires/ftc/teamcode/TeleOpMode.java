@@ -62,7 +62,7 @@ public class TeleOpMode extends OpMode{
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-        //TeamMarker = hardwareMap.servo.get("TeamMarker");
+        TeamMarker = hardwareMap.servo.get("TeamMarker");
 
         //Intake
         //Commented out until Trollbot has an intake
@@ -113,6 +113,8 @@ public class TeleOpMode extends OpMode{
             }
             mostRecentBPress = time.milliseconds();
         }
+
+
 
         // Intake:
 
