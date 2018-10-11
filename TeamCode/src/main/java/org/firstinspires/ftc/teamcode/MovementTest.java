@@ -8,8 +8,16 @@ public class MovementTest extends AutoOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         waitForStart();
-        moveForwardEncoder(.2, 500);
-        sleep(500);
-        moveBackwardEncoder(.2, 500);
+        setPower(0.5);
+        sleep(1500);
+        moveToRange(15);
+        turnToPosition(-40);
+        moveToRange(30);
+        turnToPosition(-130);
+        dropTeamMarker();
+        sleep(1000);
+        setPower(-0.5);
+        sleep(5000);
+        //turnToPosition(90);
     }
 }

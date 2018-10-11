@@ -365,6 +365,15 @@ public abstract class AutoOpMode extends LinearOpMode{
         setZero();
     }
 
+    public void turnToPosition(double desiredAngle) throws InterruptedException{
+        if (getFunctionalGyroYaw() > desiredAngle){
+            pLeftTurn(Math.abs(getFunctionalGyroYaw() - desiredAngle));
+        }
+        if (getFunctionalGyroYaw() < desiredAngle){
+            pRightTurn(Math.abs(getFunctionalGyroYaw() - desiredAngle));
+        }
+    }
+
 
 
     //TODO: Create a PI or PID-based turning method
