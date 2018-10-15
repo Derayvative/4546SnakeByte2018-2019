@@ -196,10 +196,15 @@ public abstract class AutoOpMode extends LinearOpMode{
         return error * 0.05;
     }
 
+    public double simpleStraighten(double desiredAngle, double constant) throws InterruptedException{
+        double error = findAnglularPositionError(desiredAngle);
+        return error * constant;
+    }
+
     public void moveForwardStraight(double power, double desiredAngle, int timeMS) throws InterruptedException{
         setPower(power);
         double startTime = time.milliseconds();
-        while (time.milliseconds() - startTime < timeMS){
+        while (time.milliseconds() - startTime < timeMS && opModeIsActive()){
             double correctionalTurn = simpleStraighten(desiredAngle);
             setPowerAndTurn(power, correctionalTurn);
             telemetry.addData("ANgle", getFunctionalGyroYaw());
@@ -340,7 +345,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     public void pRightTurn(double desired) throws InterruptedException {
         double start = getFunctionalGyroYaw();
         double proximity = Math.abs(desired);
-        while (Math.abs(getFunctionalGyroYaw() - start) < desired) {
+        while (Math.abs(getFunctionalGyroYaw() - start) < desired && opModeIsActive()) {
             proximity = (Math.abs(getFunctionalGyroYaw() - start - desired));
             telemetry.addData("Proximity Value: ", proximity);
             telemetry.addData("Turn value: ", -proximity * .0025 - .12);
@@ -354,7 +359,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     public void pLeftTurn(double desired) throws InterruptedException {
         double start = getFunctionalGyroYaw();
         double proximity = Math.abs(desired);
-        while (Math.abs(getFunctionalGyroYaw() - start) < desired) {
+        while (Math.abs(getFunctionalGyroYaw() - start) < desired && opModeIsActive()) {
             proximity = Math.abs((Math.abs(getFunctionalGyroYaw() - start) - desired));
             telemetry.addData("Proximity Value: ", proximity);
             telemetry.addData("Turn value: ", proximity * .0025 + .12);
@@ -406,13 +411,13 @@ public abstract class AutoOpMode extends LinearOpMode{
     //TODO: Create range sensor based movement code
 
     public void moveToRange(double rangeCM) throws InterruptedException {
-        while (Math.abs(getRangeReading() - rangeCM) > 1.5){
+        while (Math.abs(getRangeReading() - rangeCM) > 2.5 && opModeIsActive()){
             double error = getRangeReading() - rangeCM;
             if (error > 0){
                 setPower(0.1 + Math.abs(error) * 0.23/50);
             }
             else if (error < 0){
-                setPower(-0.2 - Math.abs(error) * 0.23/50);
+                setPower(-0.1 - Math.abs(error) * 0.23/50);
             }
             telemetry.addData("Range", getRangeReading());
             telemetry.update();
@@ -420,6 +425,8 @@ public abstract class AutoOpMode extends LinearOpMode{
         setPower(0);
     }
 
+    //Incorporates proportional and integral components to range sensor motion. Not as well tuned
+    //as the version with just a P loop
     public void moveToRangePI(double rangeCM) throws InterruptedException {
         double kP = 0.23/70;
         double kI = 0.000003;
@@ -451,6 +458,8 @@ public abstract class AutoOpMode extends LinearOpMode{
         setPower(0);
     }
 
+    //Incorporates proportional and integral components to range sensor motion. Not as well tuned
+    //as the version with just a P loop
     public void moveToRangePIStraighten(double rangeCM, double angle) throws InterruptedException {
         double kP = 0.23/70;
         double kI = 0.000003;
@@ -483,8 +492,13 @@ public abstract class AutoOpMode extends LinearOpMode{
         setPower(0);
     }
 
+    //Move to a certain distance as perceived by the range sensor (can do both backwards and forwards)
+    //while maintaining a certain angle. Generally this angle is the angle you start this motion as
+    //since you want to maintain straightenness. However, it is possible to say set angle to 30 when
+    //you're current angle is 0 if you wish to turn to that angle during the motion. However, this
+    //may conflict with the range sensor's reading since the reading will change as you turn
     public void moveToRangeStraighten(double rangeCM, double angle) throws InterruptedException {
-        while (Math.abs(getRangeReading() - rangeCM) > 1.5){
+        while (Math.abs(getRangeReading() - rangeCM) > 1.5 && opModeIsActive()){
             double error = getRangeReading() - rangeCM;
             double angularCorrection = simpleStraighten(angle);
             if (error > 1){
@@ -499,13 +513,15 @@ public abstract class AutoOpMode extends LinearOpMode{
         setPower(0);
     }
 
-    
+
     //TODO: Create a potential gyro-based movement code to finish in the crater
 
 
 
 
     //Most likely not for drivetrain usage
+    //Could be useful if we want to maintain a lift motor at a constant speed; however, this really
+    //is experimental and not very accurate
     public void setConstantSpeed(DcMotor motor, double encoderPerSec) throws InterruptedException {
         double currentEnc = motor.getCurrentPosition();
         double pastEnc;
@@ -544,6 +560,8 @@ public abstract class AutoOpMode extends LinearOpMode{
         }
     }
 
+    //Cubic Approximation of the relationship between encoder ticks per second and motor power
+    //Generally with 10-20% of the actual value due to battery voltage variance and low sample size
     public double getCubicApproximationOfPower(double encoderpersec) throws InterruptedException{
         double x = encoderpersec;
         double approximatePower = 0.000000000116180 * Math.pow(x,3) - 0.000000372409239 * Math.pow(x,2) + 0.000447364393957 * x - 0.011674613712852;
@@ -551,4 +569,26 @@ public abstract class AutoOpMode extends LinearOpMode{
     }
 
 
+
+    //Motion for moving into the crater. Allows robot to move essentially elliptically backwards by
+    //altering its angle throughout the motion (if you need to visualize this, the square root function
+    //is a pretty good comparison. This elliptical motion allows to avoid hitting the other alliance's
+    //minerals and also ensures we don't approach the wall at a sharp angle.
+    //A potential change to this could be experimenting with the function used to determined the
+    //desired straightening angle
+    public void glideAgainstWallMovingBack() throws InterruptedException{
+        double startTime = time.milliseconds();
+        double initialAngle = getFunctionalGyroYaw();
+        while (time.milliseconds() - startTime < 2500 && opModeIsActive()){
+            double correctionalTurn = simpleStraighten(-(time.milliseconds() - startTime) * 20 / 2500 + initialAngle, 0.05);
+            setPowerAndTurn(-0.35, correctionalTurn);
+            telemetry.addData("Correctional Turn", correctionalTurn);
+            telemetry.addData("ANgle", getFunctionalGyroYaw());
+            telemetry.update();
+        }
+        //It should reach the crater around here
+        setPower(-0.6);
+        sleep(5000);
+        setZero();
+    }
 }
