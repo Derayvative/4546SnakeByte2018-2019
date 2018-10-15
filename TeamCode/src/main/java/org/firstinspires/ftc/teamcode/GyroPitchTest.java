@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.opencv.android.JavaCamera2View;
+
 
 @Autonomous
 public class GyroPitchTest extends AutoOpMode {
