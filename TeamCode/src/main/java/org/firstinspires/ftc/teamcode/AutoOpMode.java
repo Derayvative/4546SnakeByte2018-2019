@@ -411,17 +411,19 @@ public abstract class AutoOpMode extends LinearOpMode{
     //TODO: Create range sensor based movement code
 
     public void moveToRange(double rangeCM) throws InterruptedException {
-        while (Math.abs(getRangeReading() - rangeCM) > 2.5 && opModeIsActive()){
+        while (Math.abs(getRangeReading() - rangeCM) > 3 && opModeIsActive()){
             double error = getRangeReading() - rangeCM;
             if (error > 0){
-                setPower(0.1 + Math.abs(error) * 0.23/50);
+                setPower(0.09 + Math.abs(error) * 0.23/50);
             }
             else if (error < 0){
-                setPower(-0.1 - Math.abs(error) * 0.23/50);
+                setPower(-0.09 - Math.abs(error) * 0.23/50);
             }
             telemetry.addData("Range", getRangeReading());
             telemetry.update();
         }
+        telemetry.addData("RangeMotion", "Complete");
+        telemetry.update();
         setPower(0);
     }
 
@@ -429,7 +431,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     //as the version with just a P loop
     public void moveToRangePI(double rangeCM) throws InterruptedException {
         double kP = 0.23/70;
-        double kI = 0.000003;
+        double kI = 0.0000007;
         double currentTime = System.currentTimeMillis();
         double pastTime;
         double time = 0;
@@ -446,11 +448,11 @@ public abstract class AutoOpMode extends LinearOpMode{
             telemetry.addData("Count", numCalcs);
             riemannSumError += deltaT * Math.abs(error);
             telemetry.addData("I Term", riemannSumError * kI);
-            if (error > 0){
-                setPower(0.1 + Math.abs(error) * 0.23/60 + riemannSumError * kI);
+            if (error > 0.5){
+                setPower(0.07 + Math.abs(error) * 0.23/70 + riemannSumError * kI);
             }
-            else if (error < 0){
-                setPower(-0.1 - Math.abs(error) * 0.23/60 - riemannSumError * kI);
+            else if (error < -0.5){
+                setPower(-0.07 - Math.abs(error) * 0.23/70 - riemannSumError * kI);
             }
             telemetry.addData("Range", getRangeReading());
             telemetry.update();
@@ -462,7 +464,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     //as the version with just a P loop
     public void moveToRangePIStraighten(double rangeCM, double angle) throws InterruptedException {
         double kP = 0.23/70;
-        double kI = 0.000003;
+        double kI = 0.0000015;
         double currentTime = System.currentTimeMillis();
         double pastTime;
         double time = 0;
@@ -481,15 +483,16 @@ public abstract class AutoOpMode extends LinearOpMode{
             riemannSumError += deltaT * Math.abs(error);
             telemetry.addData("I Term", riemannSumError * kI);
             if (error > 0.5){
-                setPowerAndTurn(0.1 + Math.abs(error) * 0.23/60 + riemannSumError * kI, angularCorrection);
+                setPowerAndTurn(Math.abs(error) * 0.23/70 + riemannSumError * kI, angularCorrection);
             }
             else if (error < -0.5){
-                setPowerAndTurn(-0.1 - Math.abs(error) * 0.23/60 - riemannSumError * kI, angularCorrection);
+                setPowerAndTurn(-Math.abs(error) * 0.23/70 - riemannSumError * kI, angularCorrection);
             }
             telemetry.addData("Range", getRangeReading());
             telemetry.update();
         }
         setPower(0);
+        telemetry.addData("Final Val", getRangeReading());
     }
 
     //Move to a certain distance as perceived by the range sensor (can do both backwards and forwards)
@@ -498,7 +501,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     //you're current angle is 0 if you wish to turn to that angle during the motion. However, this
     //may conflict with the range sensor's reading since the reading will change as you turn
     public void moveToRangeStraighten(double rangeCM, double angle) throws InterruptedException {
-        while (Math.abs(getRangeReading() - rangeCM) > 1.5 && opModeIsActive()){
+        while (Math.abs(getRangeReading() - rangeCM) > 2.5 && opModeIsActive()){
             double error = getRangeReading() - rangeCM;
             double angularCorrection = simpleStraighten(angle);
             if (error > 1){
@@ -591,4 +594,30 @@ public abstract class AutoOpMode extends LinearOpMode{
         sleep(5000);
         setZero();
     }
+
+    public void glideAgainstWallMovingBack(double angularChange, int timeMS) throws InterruptedException{
+        double startTime = time.milliseconds();
+        double initialAngle = getFunctionalGyroYaw();
+        while (time.milliseconds() - startTime < timeMS && opModeIsActive()){
+            double correctionalTurn = simpleStraighten(-(time.milliseconds() - startTime) / timeMS * angularChange + initialAngle, 0.05);
+            setPowerAndTurn(-0.4, correctionalTurn);
+            telemetry.addData("Correctional Turn", correctionalTurn);
+            telemetry.addData("ANgle", getFunctionalGyroYaw());
+            telemetry.update();
+        }
+        //It should reach the crater around here
+        setPower(-0.6);
+        sleep(5000);
+        setZero();
+    }
+
+    public void scoreMarker() throws InterruptedException{
+        setTeamMarker();
+        sleep(1000);
+        dropTeamMarker();
+        sleep(1000);
+        setTeamMarker();
+    }
+
+    
 }

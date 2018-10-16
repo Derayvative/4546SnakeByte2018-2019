@@ -9,6 +9,7 @@ public class RangeSensorTest extends AutoOpMode {
         initialize();
         waitForStart();
         moveToRangePIStraighten(45, 0);
+        moveToRangePIStraighten(90,0);
 
     }
 }
