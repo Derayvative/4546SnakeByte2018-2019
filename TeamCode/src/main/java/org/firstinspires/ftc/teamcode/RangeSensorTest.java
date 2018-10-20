@@ -8,8 +8,24 @@ public class RangeSensorTest extends AutoOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         waitForStart();
-        moveToRangePIStraighten(45, 0);
-        moveToRangePIStraighten(90,0);
+        turn(0.2);
+        double highestReading = 0;
+        double highestAngle = 0;
+
+        while(opModeIsActive()){
+            double reading = getRangeReading();
+            double angle = getFunctionalGyroYaw();
+            telemetry.addData("Range", reading);
+            telemetry.addData("Gyro", angle);
+            if (reading > highestReading){
+                highestReading = reading;
+                highestAngle = angle;
+            }
+            telemetry.addData("Highest", highestReading);
+            telemetry.addData("H Angle", highestAngle);
+            telemetry.update();
+            sleep(300);
+        }
 
     }
 }

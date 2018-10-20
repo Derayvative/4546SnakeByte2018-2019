@@ -28,6 +28,10 @@ public class TeleOpMode extends OpMode{
     DcMotor FR;
     DcMotor BL;
     DcMotor BR;
+
+    DcMotor middleIntake;
+    DcMotor outerIntake;
+
     Servo TeamMarker;
     double servoPos;
 
@@ -62,6 +66,9 @@ public class TeleOpMode extends OpMode{
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
+        middleIntake = hardwareMap.dcMotor.get("middleIntake");
+        outerIntake = hardwareMap.dcMotor.get("outerIntake");
+
         TeamMarker = hardwareMap.servo.get("TeamMarker");
 
         //Intake
@@ -112,6 +119,19 @@ public class TeleOpMode extends OpMode{
                 halfSpeed = 1;
             }
             mostRecentBPress = time.milliseconds();
+        }
+
+        if (gamepad2.right_trigger > 0.1){
+            middleIntake.setPower(-1.0);
+            outerIntake.setPower(-1.0);
+        }
+        else if (gamepad2.left_trigger > 0.1){
+            middleIntake.setPower(1.0);
+            outerIntake.setPower(1.0);
+        }
+        else{
+            middleIntake.setPower(0);
+            outerIntake.setPower(0);
         }
 
 

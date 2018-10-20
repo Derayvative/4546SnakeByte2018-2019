@@ -8,8 +8,14 @@ public class MovementTest extends AutoOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         waitForStart();
-        moveToRange(50);
-        moveToRange(20);
-        moveToRange(70);
+        /*
+        moveToRangePIStraighten(50, 0);
+        moveToRangePIStraighten(20, 0);
+        moveToRangePIStraighten(70, 0);
+        */
+        //PILeftTurn(90);
+        //PILeftTurn(45);
+        turnToPositionPI(0);
+        //pLeftTurn(46);
     }
 }
