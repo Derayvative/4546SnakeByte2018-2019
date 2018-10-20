@@ -90,8 +90,8 @@ public abstract class AutoOpMode extends LinearOpMode{
 
         //Other Variables
 
-        CS = hardwareMap.colorSensor.get("goldDetector");
-        DS = hardwareMap.get(DistanceSensor.class, "goldDetector");
+        CS = hardwareMap.colorSensor.get("tapeSensor");
+        DS = hardwareMap.get(DistanceSensor.class, "tapeSensor");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
         resetTimer();
@@ -806,5 +806,11 @@ public abstract class AutoOpMode extends LinearOpMode{
         setTeamMarker();
     }
 
-
+    // COLOR SENSOR CODE
+    public boolean senseTape(int value) throws InterruptedException {
+        if (CS.red() >= value || CS.blue() >= value) {
+            return true;
+        }
+        return false;
+    }
 }
