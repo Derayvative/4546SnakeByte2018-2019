@@ -15,6 +15,12 @@ public class MovementTest extends AutoOpMode {
         */
         //PILeftTurn(90);
         //PILeftTurn(45);
+        //turnToPositionPI(0);
+        //PILeftTurn(45);
+        //pLeftTurn(90);
+        //pRightTurn(45);
+        //pRightTurn(90);
+        //turnToPositionPI(0);
         turnToPositionPI(0);
         //pLeftTurn(46);
     }
