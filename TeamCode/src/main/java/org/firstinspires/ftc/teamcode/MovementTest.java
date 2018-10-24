@@ -21,7 +21,7 @@ public class MovementTest extends AutoOpMode {
         //pRightTurn(45);
         //pRightTurn(90);
         //turnToPositionPI(0);
-        turnToPositionPI(0);
+        moveToRangePIStraightenToStartAngle(50);
         //pLeftTurn(46);
     }
 }

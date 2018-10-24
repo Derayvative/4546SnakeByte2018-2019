@@ -60,6 +60,7 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     //Constants
 
+    double speedUp = 0;
     //Initializes Motors, Servos, Sensors, etc when the robot is hanging
     public void initialize() throws InterruptedException{
         time =  new ElapsedTime();
@@ -402,16 +403,19 @@ public abstract class AutoOpMode extends LinearOpMode{
         double start = getFunctionalGyroYaw();
         double proximity = Math.abs(desired);
         double startTime = time.milliseconds();
-        double speedUp = 0;
+        double timeSinceSpeedIncrease = 0;
+        speedUp = 0;
         while (Math.abs(getFunctionalGyroYaw() - start) < desired - 1 && opModeIsActive()) {
             proximity = Math.abs((Math.abs(getFunctionalGyroYaw() - start) - desired));
             telemetry.addData("Proximity Value: ", proximity);
             telemetry.addData("Turn value: ", proximity * .003 + .25 + speedUp);
             telemetry.addData("Yaw Value:", getFunctionalGyroYaw());
+            telemetry.addData("Speed Up", speedUp);
             telemetry.update();
-            turn(proximity * .003 + .25 + speedUp);
-            if (time.milliseconds() - startTime > 3000){
+            turn(proximity * .003 + .23 + speedUp);
+            if (time.milliseconds() - startTime > 3000 ){
                 speedUp = 0.05;
+
             }
             if (time.milliseconds() - startTime > 5000){
                 break;
@@ -667,8 +671,8 @@ public abstract class AutoOpMode extends LinearOpMode{
     //Incorporates proportional and integral components to range sensor motion. Not as well tuned
     //as the version with just a P loop
     public void moveToRangePIStraightenToStartAngle(double rangeCM) throws InterruptedException {
-        double kP = 0.12/90;
-        double kI = 0.026 / 1000;
+        double kP = 0.18/50;
+        double kI = 0.0010 / 1000;
         double desiredAngle = getFunctionalGyroYaw();
         double currentTime = System.currentTimeMillis();
         double pastTime;
@@ -677,8 +681,11 @@ public abstract class AutoOpMode extends LinearOpMode{
         double riemannSumError = 0;
         double initialPower = 0.04;
         double movementCase = 0;
-        if (Math.abs(getRangeReading() - rangeCM) < 10){
+        if (Math.abs(getRangeReading() - rangeCM) <= 50){
             initialPower = 0.1;
+        }
+        if (Math.abs(getRangeReading() - rangeCM) <= 15){
+            initialPower = 0.15;
         }
         while (Math.abs(getRangeReading() - rangeCM) > 1.5 && opModeIsActive()){
             double error = getRangeReading() - rangeCM;
@@ -695,7 +702,9 @@ public abstract class AutoOpMode extends LinearOpMode{
             telemetry.addData("I Term", riemannSumError * kI);
             //setPower(error * 0.23/70 + riemannSumError * kI);
             if (error > 0.5){
-                setPowerAndTurn(initialPower + Math.abs(error) * 0.23/70 + riemannSumError * kI, correctionalTurn);
+                double power = initialPower + Math.abs(error) * kP + riemannSumError * kI;
+                telemetry.addData("Power", power);
+                setPowerAndTurn(power, correctionalTurn);
                 if (movementCase == 0){
                     movementCase = 1;
                 }
@@ -706,7 +715,9 @@ public abstract class AutoOpMode extends LinearOpMode{
                 }
             }
             else if (error < -0.5){
-                setPowerAndTurn(-initialPower - Math.abs(error) * 0.23/70 + riemannSumError * kI, correctionalTurn);
+                double power = -initialPower - Math.abs(error) * kP + riemannSumError * kI;
+                telemetry.addData("Power", power);
+                setPowerAndTurn(power, correctionalTurn);
                 if (movementCase == 0){
                     movementCase = 2;
                 }
@@ -820,7 +831,7 @@ public abstract class AutoOpMode extends LinearOpMode{
             telemetry.update();
         }
         //It should reach the crater around here
-        setPower(-0.25);
+        setPower(-0.35);
         sleep(5000);
         setZero();
     }
