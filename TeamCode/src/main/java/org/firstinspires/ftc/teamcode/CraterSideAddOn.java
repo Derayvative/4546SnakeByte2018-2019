@@ -13,18 +13,18 @@ public class CraterSideAddOn extends AutoOpMode{
         waitForStart();
         setPower(-.1);
         while(opModeIsActive()){
-            if (senseTape(150)){
+            //if (senseTape(150)){
                 setZero();
                 break;
-            }
+           // }
         }
         sleep(1000);
         setPower(.05);
         while(opModeIsActive()){
-            if (senseTape(150)){
+            //if (senseTape(150)){
                 setZero();
                 break;
-            }
+            //}
         }
         turnToPositionPI(-90);
         pMoveForward(3000);

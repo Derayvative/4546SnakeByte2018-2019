@@ -32,6 +32,8 @@ public class TeleOpMode extends OpMode{
     DcMotor middleIntake;
     DcMotor outerIntake;
 
+    DcMotor lift;
+
     Servo TeamMarker;
     double servoPos;
 
@@ -68,6 +70,7 @@ public class TeleOpMode extends OpMode{
         BR = hardwareMap.dcMotor.get("BR");
         middleIntake = hardwareMap.dcMotor.get("middleIntake");
         outerIntake = hardwareMap.dcMotor.get("outerIntake");
+        lift = hardwareMap.dcMotor.get("lift");
 
         TeamMarker = hardwareMap.servo.get("TeamMarker");
 
@@ -121,17 +124,27 @@ public class TeleOpMode extends OpMode{
             mostRecentBPress = time.milliseconds();
         }
 
-        if (gamepad1.right_trigger > 0.1){
+        if (gamepad2.right_trigger > 0.1){
             middleIntake.setPower(-1.0);
             outerIntake.setPower(-1.0);
         }
-        else if (gamepad1.left_trigger > 0.1){
+        else if (gamepad2.left_trigger > 0.1){
             middleIntake.setPower(1.0);
             outerIntake.setPower(1.0);
         }
         else{
             middleIntake.setPower(0);
             outerIntake.setPower(0);
+        }
+
+        if (gamepad1.right_trigger > 0.1){
+            lift.setPower(gamepad1.right_trigger);
+        }
+        else if (gamepad1.left_trigger > 0.1){
+            lift.setPower(gamepad1.left_trigger * -1);
+        }
+        else{
+            lift.setPower(0);
         }
 
 

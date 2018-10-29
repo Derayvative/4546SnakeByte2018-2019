@@ -55,7 +55,10 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     ColorSensor CS;
     DistanceSensor DS;
-    ModernRoboticsI2cRangeSensor rangeSensor;
+
+    DistanceSensor rangeSensor;
+
+    //ModernRoboticsI2cRangeSensor rangeSensor;
 
 
     //Constants
@@ -95,7 +98,9 @@ public abstract class AutoOpMode extends LinearOpMode{
         CS = hardwareMap.colorSensor.get("goldDetector");
         DS = hardwareMap.get(DistanceSensor.class, "goldDetector");
 
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+        rangeSensor = hardwareMap.get(DistanceSensor.class, "sensor_range");
+
+        //revRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
 
         resetTimer();
         previousGyro = 0;
@@ -383,20 +388,26 @@ public abstract class AutoOpMode extends LinearOpMode{
         double speedUp = 0;
         while (Math.abs(getFunctionalGyroYaw() - start) < desired && opModeIsActive()) {
             proximity = (Math.abs(getFunctionalGyroYaw() - start - desired));
+            double power = -proximity * .00355 - .2 - speedUp;
+
             telemetry.addData("Proximity Value: ", proximity);
-            telemetry.addData("Turn Power: ", -proximity * .003 - .25 - speedUp);
             telemetry.addData("Yaw (Functional): ", getFunctionalGyroYaw());
             telemetry.addData("Time", time.milliseconds() - startTime);
             telemetry.update();
-            turn(-proximity * .003 - .25 - speedUp);
-            if (time.milliseconds() - startTime > 3000){
-                speedUp = 0.05;
+            if (power > 0.4){
+                power = 0.4;
             }
+            telemetry.addData("Turn Power: ", power);
+            turn(power);
+            speedUp = (time.milliseconds() - startTime) * 0.05 / 1000;
             if (time.milliseconds() - startTime > 5000){
                 break;
             }
         }
         setZero();
+        telemetry.addData("Power", 0.2 + speedUp);
+        telemetry.update();
+        //sleep(5000);
     }
 
     public void pLeftTurn(double desired) throws InterruptedException {
@@ -407,21 +418,28 @@ public abstract class AutoOpMode extends LinearOpMode{
         speedUp = 0;
         while (Math.abs(getFunctionalGyroYaw() - start) < desired - 1 && opModeIsActive()) {
             proximity = Math.abs((Math.abs(getFunctionalGyroYaw() - start) - desired));
+            double power = proximity * .00355 + .2 + speedUp;
             telemetry.addData("Proximity Value: ", proximity);
-            telemetry.addData("Turn value: ", proximity * .003 + .25 + speedUp);
+
             telemetry.addData("Yaw Value:", getFunctionalGyroYaw());
             telemetry.addData("Speed Up", speedUp);
             telemetry.update();
-            turn(proximity * .003 + .23 + speedUp);
-            if (time.milliseconds() - startTime > 3000 ){
-                speedUp = 0.05;
-
+            if (power > 0.4){
+                power = 0.4;
             }
+            telemetry.addData("Turn value: ", power);
+            turn(power);
+            //if (time.milliseconds() - startTime >= 1000) {
+                speedUp = (time.milliseconds() - startTime) * 0.05 / 1000;
+          //  }
             if (time.milliseconds() - startTime > 5000){
                 break;
             }
         }
         setZero();
+        telemetry.addData("Power", 0.2 + speedUp);
+        telemetry.update();
+        //sleep(5000);
     }
 
     public void PILeftTurn(double desired) throws InterruptedException {
@@ -611,19 +629,23 @@ public abstract class AutoOpMode extends LinearOpMode{
     //Incorporates proportional and integral components to range sensor motion. Not as well tuned
     //as the version with just a P loop
     public void moveToRangePIStraighten(double rangeCM, double desiredAngle) throws InterruptedException {
-        double kP = 0.12/70;
-        double kI = 0.000003;
+        double kP = 0.18/50;
+        double kI = 0.0010 / 1000;
+        //double desiredAngle = getFunctionalGyroYaw();
         double currentTime = System.currentTimeMillis();
         double pastTime;
         double time = 0;
         double numCalcs = 0;
         double riemannSumError = 0;
-        double initialPower = 0.08;
+        double initialPower = 0.04;
         double movementCase = 0;
-        if (Math.abs(getRangeReading() - rangeCM) < 10){
-            initialPower = 0.14;
+        if (Math.abs(getRangeReading() - rangeCM) <= 50){
+            initialPower = 0.1;
         }
-        while (Math.abs(getRangeReading() - rangeCM) > 1 && opModeIsActive()){
+        if (Math.abs(getRangeReading() - rangeCM) <= 15){
+            initialPower = 0.15;
+        }
+        while (Math.abs(getRangeReading() - rangeCM) > 1.5 && opModeIsActive()){
             double error = getRangeReading() - rangeCM;
             double correctionalTurn = simpleStraighten(desiredAngle, 0.03);
             telemetry.addData("Error", error);
@@ -638,24 +660,34 @@ public abstract class AutoOpMode extends LinearOpMode{
             telemetry.addData("I Term", riemannSumError * kI);
             //setPower(error * 0.23/70 + riemannSumError * kI);
             if (error > 0.5){
-                setPowerAndTurn(initialPower + Math.abs(error) * 0.23/70 + riemannSumError * kI, correctionalTurn);
+                double power = initialPower + Math.abs(error) * kP + riemannSumError * kI;
+                if (power > 0.25){
+                    power = 0.25;
+                }
+                telemetry.addData("Power", power);
+                setPowerAndTurn(power, correctionalTurn);
                 if (movementCase == 0){
                     movementCase = 1;
                 }
                 if (movementCase == 2){
                     kI = 0;
-                    initialPower = 0.09;
+                    initialPower = 0.11;
                     telemetry.addData("Reversing", "Direction");
                 }
             }
             else if (error < -0.5){
-                setPowerAndTurn(-initialPower - Math.abs(error) * 0.23/70 + riemannSumError * kI, correctionalTurn);
+                double power = -initialPower - Math.abs(error) * kP + riemannSumError * kI;
+                if (power < -0.25){
+                    power = -0.25;
+                }
+                telemetry.addData("Power", power);
+                setPowerAndTurn(power, correctionalTurn);
                 if (movementCase == 0){
                     movementCase = 2;
                 }
                 if (movementCase == 1){
                     kI = 0;
-                    initialPower = 0.09;
+                    initialPower = 0.11;
                     telemetry.addData("Reversing", "Direction");
                 }
             }
@@ -703,6 +735,9 @@ public abstract class AutoOpMode extends LinearOpMode{
             //setPower(error * 0.23/70 + riemannSumError * kI);
             if (error > 0.5){
                 double power = initialPower + Math.abs(error) * kP + riemannSumError * kI;
+                if (power > 0.3){
+                    power = 0.3;
+                }
                 telemetry.addData("Power", power);
                 setPowerAndTurn(power, correctionalTurn);
                 if (movementCase == 0){
@@ -716,6 +751,9 @@ public abstract class AutoOpMode extends LinearOpMode{
             }
             else if (error < -0.5){
                 double power = -initialPower - Math.abs(error) * kP + riemannSumError * kI;
+                if (power < -0.3){
+                    power = -0.3;
+                }
                 telemetry.addData("Power", power);
                 setPowerAndTurn(power, correctionalTurn);
                 if (movementCase == 0){
@@ -825,9 +863,9 @@ public abstract class AutoOpMode extends LinearOpMode{
         double initialAngle = getFunctionalGyroYaw();
         while (time.milliseconds() - startTime < 2500 && opModeIsActive()){
             double correctionalTurn = simpleStraighten(-(time.milliseconds() - startTime) * 20 / 2500 + initialAngle, 0.05);
-            setPowerAndTurn(-0.18, correctionalTurn);
+            setPowerAndTurn(-0.29, correctionalTurn);
             telemetry.addData("Correctional Turn", correctionalTurn);
-            telemetry.addData("ANgle", getFunctionalGyroYaw());
+            telemetry.addData("Angle", getFunctionalGyroYaw());
             telemetry.update();
         }
         //It should reach the crater around here
@@ -841,13 +879,13 @@ public abstract class AutoOpMode extends LinearOpMode{
         double initialAngle = getFunctionalGyroYaw();
         while (time.milliseconds() - startTime < timeMS && opModeIsActive()){
             double correctionalTurn = simpleStraighten(-(time.milliseconds() - startTime) / timeMS * angularChange + initialAngle, 0.05);
-            setPowerAndTurn(-0.4, correctionalTurn);
+            setPowerAndTurn(-0.29, correctionalTurn);
             telemetry.addData("Correctional Turn", correctionalTurn);
             telemetry.addData("ANgle", getFunctionalGyroYaw());
             telemetry.update();
         }
         //It should reach the crater around here
-        setPower(-0.6);
+        setPower(-0.35);
         sleep(5000);
         setZero();
     }
