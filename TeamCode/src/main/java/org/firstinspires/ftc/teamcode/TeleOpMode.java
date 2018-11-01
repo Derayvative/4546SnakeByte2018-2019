@@ -36,13 +36,17 @@ public class TeleOpMode extends OpMode{
 
     Servo TeamMarker;
     Servo basketServo;
+    Servo gateServo;
 
     boolean basketServoPositionDown = true;
+    boolean gateServoPositionDown = true;
+
     double servoPos;
 
     //Time-related variables
     ElapsedTime time;
     double mostRecentBPress;
+    double mostRecentAPress;
 
     //Constants
 
@@ -77,6 +81,9 @@ public class TeleOpMode extends OpMode{
 
         TeamMarker = hardwareMap.servo.get("TeamMarker");
 
+        basketServo = hardwareMap.servo.get("basketServo");
+        gateServo = hardwareMap.servo.get("gateServo");
+
         //Intake
         //Commented out until Trollbot has an intake
         //IT = hardwareMap.dcMotor.get("IT");
@@ -86,6 +93,7 @@ public class TeleOpMode extends OpMode{
         time = new ElapsedTime();
         time.reset();
         mostRecentBPress = 0;
+        mostRecentAPress = 0;
 
 
 
@@ -150,14 +158,27 @@ public class TeleOpMode extends OpMode{
             lift.setPower(0);
         }
 
-        if (gamepad1.b && basketServoPositionDown){
+        if (gamepad2.a && basketServoPositionDown && time.milliseconds() - mostRecentAPress > 250){
             basketServoPositionDown = false;
+            basketServo.setPosition(0.4);
+            mostRecentAPress = time.milliseconds();
         }
-        else if (gamepad1.b && !basketServoPositionDown){
+        else if (gamepad2.a && !basketServoPositionDown && time.milliseconds() - mostRecentAPress > 250){
             basketServoPositionDown = true;
+            basketServo.setPosition(0.9);
+            mostRecentAPress = time.milliseconds();
         }
 
-
+        if (gamepad2.b && gateServoPositionDown && time.milliseconds() - mostRecentAPress > 250){
+            gateServoPositionDown = false;
+            gateServo.setPosition(0.7);
+            mostRecentAPress = time.milliseconds();
+        }
+        else if (gamepad2.b && !gateServoPositionDown && time.milliseconds() - mostRecentAPress > 250){
+            gateServoPositionDown = true;
+            gateServo.setPosition(0.3);
+            mostRecentAPress = time.milliseconds();
+        }
 
         // Intake:
 

@@ -7,19 +7,15 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 public class TestColorValues extends AutoOpMode {
     @Override
     public void runOpMode() throws InterruptedException{
-        initializeDriveTrainOnly();
-        CS = hardwareMap.colorSensor.get("tapeSensor");
-        DS = hardwareMap.get(DistanceSensor.class, "tapeSensor");
+        initialize();
         waitForStart();
-        int redVal = CS.red();
-        int blueVal = CS.blue();
-        int greenVal = CS.green();
-        telemetry.addData("Red Value: ", redVal);
-        telemetry.addData("Blue Value: ", blueVal);
-        telemetry.addData("Green Value: ", greenVal);
-        telemetry.update();
-        sleep(10000);
-        setZero();
+        for (double i = 0; i <= 1.0; i += 0.1){
+            sleep(300);
+            basketServo.setPosition(i);
+            gateServo.setPosition(i);
+            telemetry.addData("I", i);
+            telemetry.update();
+        }
     }
 
 }

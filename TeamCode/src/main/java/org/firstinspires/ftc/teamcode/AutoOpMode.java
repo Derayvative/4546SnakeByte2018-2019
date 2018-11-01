@@ -61,6 +61,9 @@ public abstract class AutoOpMode extends LinearOpMode{
 
     DistanceSensor rangeSensor;
 
+    Servo basketServo;
+    Servo gateServo;
+
     //ModernRoboticsI2cRangeSensor rangeSensor;
 
 
@@ -87,6 +90,9 @@ public abstract class AutoOpMode extends LinearOpMode{
         BL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         FR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        basketServo = hardwareMap.servo.get("basketServo");
+        gateServo = hardwareMap.servo.get("gateServo");
 
         //Non-Drive Train Motors
 
@@ -391,7 +397,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         double speedUp = 0;
         while (Math.abs(getFunctionalGyroYaw() - start) < desired && opModeIsActive()) {
             proximity = (Math.abs(getFunctionalGyroYaw() - start - desired));
-            double power = -proximity * .00355 - .2 - speedUp;
+            double power = -proximity * .00355 - .26 - speedUp;
 
             telemetry.addData("Proximity Value: ", proximity);
             telemetry.addData("Yaw (Functional): ", getFunctionalGyroYaw());
@@ -421,7 +427,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         speedUp = 0;
         while (Math.abs(getFunctionalGyroYaw() - start) < desired - 1 && opModeIsActive()) {
             proximity = Math.abs((Math.abs(getFunctionalGyroYaw() - start) - desired));
-            double power = proximity * .00355 + .2 + speedUp;
+            double power = proximity * .00355 + .26 + speedUp;
             telemetry.addData("Proximity Value: ", proximity);
 
             telemetry.addData("Yaw Value:", getFunctionalGyroYaw());
