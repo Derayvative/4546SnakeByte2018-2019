@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Bitmap;
 import android.graphics.Camera;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -17,6 +18,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptScanServo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_DOWN_POSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_UP_POSITION;
@@ -73,7 +76,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         FR = hardwareMap.dcMotor.get("FR");
         BL = hardwareMap.dcMotor.get("BL");
         BR = hardwareMap.dcMotor.get("BR");
-        TeamMarker = hardwareMap.servo.get("TeamMarker");
+        //TeamMarker = hardwareMap.servo.get("TeamMarker");
         //Configures the encoders for the motors
 
         FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -95,8 +98,8 @@ public abstract class AutoOpMode extends LinearOpMode{
 
         //Other Variables
 
-        CS = hardwareMap.colorSensor.get("goldDetector");
-        DS = hardwareMap.get(DistanceSensor.class, "goldDetector");
+        //CS = hardwareMap.colorSensor.get("goldDetector");
+        //DS = hardwareMap.get(DistanceSensor.class, "goldDetector");
 
         rangeSensor = hardwareMap.get(DistanceSensor.class, "sensor_range");
 
@@ -897,6 +900,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         sleep(1000);
         setTeamMarker();
     }
+
 
 
 }

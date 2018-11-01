@@ -20,6 +20,7 @@ public class AutonomousDepot extends AutoOpMode {
 
         //pLeftTurn(55);
         turnToPosition(-55);
+        turnToPosition(-55);
 
         image1 = GDV.getImage();
         telemetry.addData("Hello","Hello");
@@ -28,11 +29,13 @@ public class AutonomousDepot extends AutoOpMode {
         sleep(300);
         double scoreR = GDV.findCentralYellowness(image1);
         //pLeftTurn(25);
-        turnToPosition(-95);
+        turnToPosition(-85);
+        turnToPosition(-85);
         sleep(300);
         image2 = GDV.getImage();
         double scoreM = GDV.findCentralYellowness(image2);
-        turnToPosition(-120);
+        turnToPosition(-110);
+        turnToPosition(-110);
         //pLeftTurn(25);
         sleep(300);
         image3 = GDV.getImage();
@@ -44,7 +47,8 @@ public class AutonomousDepot extends AutoOpMode {
         //sleep(1000);
         if (scoreL < scoreM && scoreL < scoreR){
             //PIRightTurn(73);
-            turnToPosition(-30);
+           // turnToPosition(-25);
+            turnToPosition(-25);
             telemetry.addData("SetUp", "GMM");
             telemetry.update();
 
@@ -54,29 +58,31 @@ public class AutonomousDepot extends AutoOpMode {
             //setPower(0.5);
             setPower(0.35);
             sleep(1500);
-            moveToRangePI(5);
+            moveToRangePIStraightenToStartAngle(15);
             turnToPosition(40);
             moveToRangePIStraightenToStartAngle(20);
             //scoreMarker();
             turnToPosition(55);
             //setPower(-0.4);
             //sleep(10000);
+            sleep(200);
             glideAgainstWallMovingBack();
         }
         if (scoreM < scoreL && scoreM < scoreR) {
             telemetry.addData("SetUp", "MGM");
             telemetry.update();
             //PIRightTurn(113);
-            turnToPosition(0);
+            //turnToPosition(0);
             turnToPosition(0);
 
             moveTime(2000, .35);
-            moveToRangePIStraightenToStartAngle(20.0);
+            //moveToRangePIStraightenToStartAngle(20.0);
             //scoreMarker();
-            moveToRangePIStraightenToStartAngle(15);
+            moveToRangePIStraightenToStartAngle(23);
             pRightTurn(55);
             //pMoveBackward(10000);
             turnToPosition(55);
+            sleep(200);
             glideAgainstWallMovingBack();
         }
         if (scoreR < scoreL && scoreR < scoreM){
@@ -84,18 +90,23 @@ public class AutonomousDepot extends AutoOpMode {
             telemetry.update();
             //PIRightTurn(145);
             turnToPosition(0);
-            turnToPosition(30);
+            turnToPosition(32);
+            //urnToPositionPI(25);
+
             setPower(0.25);
             sleep(1500);
             moveToRangePIStraightenToStartAngle(20);
             turnToPosition(-45);
-            moveToRangePIStraightenToStartAngle(15);
+            turnToPosition(-45);
+
+            //moveToRangePIStraightenToStartAngle(15);
             //scoreMarker();
-            moveToRangePIStraightenToStartAngle(8);
-            turnToPosition(55);
+            moveToRangePIStraighten(12, -45);
+            turnToPosition(48);
             //sleep(1000);
             //setPower(-0.5);
             //sleep(5000);
+            sleep(200);
             glideAgainstWallMovingBack();
         }
 

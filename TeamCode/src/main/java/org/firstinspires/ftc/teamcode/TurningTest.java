@@ -16,6 +16,11 @@ public class TurningTest extends AutoOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //vuforiaInit();
+        initialize();
         waitForStart();
+
+        turnToPosition(-60);
+        turnToPosition(-90);
+        turnToPosition(-120);
     }
 }
