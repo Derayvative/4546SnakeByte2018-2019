@@ -35,6 +35,7 @@ public class TeleOpMode extends OpMode{
     DcMotor lift;
 
     Servo TeamMarker;
+
     Servo basketServo;
     Servo gateServo;
 

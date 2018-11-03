@@ -559,9 +559,15 @@ public abstract class AutoOpMode extends LinearOpMode{
         telemetry.update();
     }
     public void dropTeamMarker() {
-        TeamMarker.setPosition(TEAM_MARKER_DOWN_POSITION);
-        telemetry.addData("TMarker Pos: ", TeamMarker.getPosition());
-        telemetry.update();
+
+        gateServo.setPosition(.7);
+        basketServo.setPosition(.9);
+
+        sleep(1000);
+
+        basketServo.setPosition(.3);
+        gateServo.setPosition(.4);
+
     }
 
     //TODO: Create an approach to detecting the gold. Some possibilities include Color Sensor, OpenCV, BitMaps
@@ -878,7 +884,7 @@ public abstract class AutoOpMode extends LinearOpMode{
             telemetry.update();
         }
         //It should reach the crater around here
-        setPower(-0.35);
+        goGyroPark();
         sleep(5000);
         setZero();
     }
@@ -905,6 +911,35 @@ public abstract class AutoOpMode extends LinearOpMode{
         dropTeamMarker();
         sleep(1000);
         setTeamMarker();
+    }
+
+    public void goGyroPark() throws InterruptedException {
+        double power = 0;
+
+        telemetry.addData("Gyro Pitch", getGyroPitch());
+        telemetry.addData("power", power);
+        telemetry.update();
+
+        while(opModeIsActive()) {
+
+            if (getGyroPitch() > 0 && getGyroPitch() < 1 ) {
+                power = .35;
+                setPower(power);
+            }
+
+            else if (getGyroPitch() < 5) {
+
+                power =  (.225/(Math.abs(getGyroPitch())) + .1);
+                setPower(power);
+            }
+
+            else {
+                telemetry.addData("threshold", "motionFinished");
+                telemetry.update();
+                break;
+            }
+
+        }
     }
 
 

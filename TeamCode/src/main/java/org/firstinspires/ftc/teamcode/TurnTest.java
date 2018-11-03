@@ -9,16 +9,13 @@ public class TurnTest extends AutoOpMode {
         initialize();
         setTeamMarker();
         waitForStart();
-        moveToRangeStraighten(15,0);
-        pRightTurn(90);
-        moveToRangeStraighten(50, 90);
-        pRightTurn(135);
+        pLeftTurn(25);
         sleep(1000);
-        dropTeamMarker();
+        pLeftTurn(45);
         sleep(1000);
-        setTeamMarker();
-        pRightTurn(45);
-        setPower(0.5);
-        sleep(10000);
+        pLeftTurn(90);
+        sleep(1000);
+
+
     }
 }

@@ -47,13 +47,13 @@ public class AutonomousDepot extends AutoOpMode {
         //sleep(1000);
         if (scoreL < scoreM && scoreL < scoreR){
             //PIRightTurn(73);
-           // turnToPosition(-25);
+            // turnToPosition(-25);
             turnToPosition(-25);
             telemetry.addData("SetUp", "GMM");
             telemetry.update();
 
-           //setPower(0.5);
-           //sleep(10000);
+            //setPower(0.5);
+            //sleep(10000);
 
             //setPower(0.5);
             setPower(0.35);
@@ -63,6 +63,10 @@ public class AutonomousDepot extends AutoOpMode {
             moveToRangePIStraightenToStartAngle(20);
             //scoreMarker();
             turnToPosition(55);
+
+            sleep(1000);
+            dropTeamMarker();
+
             //setPower(-0.4);
             //sleep(10000);
             sleep(200);
@@ -82,6 +86,10 @@ public class AutonomousDepot extends AutoOpMode {
             pRightTurn(55);
             //pMoveBackward(10000);
             turnToPosition(55);
+
+            sleep(1000);
+            dropTeamMarker();
+
             sleep(200);
             glideAgainstWallMovingBack();
         }
@@ -106,9 +114,15 @@ public class AutonomousDepot extends AutoOpMode {
             //sleep(1000);
             //setPower(-0.5);
             //sleep(5000);
+
+            sleep(1000);
+            dropTeamMarker();
+
             sleep(200);
             glideAgainstWallMovingBack();
         }
 
     }
 }
+
+
