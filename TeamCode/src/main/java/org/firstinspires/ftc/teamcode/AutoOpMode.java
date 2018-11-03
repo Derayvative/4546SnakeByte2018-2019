@@ -560,13 +560,16 @@ public abstract class AutoOpMode extends LinearOpMode{
     }
     public void dropTeamMarker() {
 
-        gateServo.setPosition(.7);
-        basketServo.setPosition(.9);
+        gateServo.setPosition(.3);
+        sleep(1000);
+        basketServo.setPosition(.4);
 
         sleep(1000);
 
-        basketServo.setPosition(.3);
-        gateServo.setPosition(.4);
+        basketServo.setPosition(.9);
+        sleep(1000);
+        gateServo.setPosition(.7);
+
 
     }
 

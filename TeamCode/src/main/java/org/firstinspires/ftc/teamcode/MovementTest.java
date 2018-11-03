@@ -10,6 +10,7 @@ public class MovementTest extends AutoOpMode {
         waitForStart();
 
         dropTeamMarker();
+        sleep(1000);
 
     }
 }
