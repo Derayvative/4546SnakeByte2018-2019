@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_DOWN_POSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.TEAM_MARKER_UP_POSITION;
 
@@ -80,10 +81,13 @@ public class TeleOpMode extends OpMode{
         outerIntake = hardwareMap.dcMotor.get("outerIntake");
         lift = hardwareMap.dcMotor.get("lift");
 
-        TeamMarker = hardwareMap.servo.get("TeamMarker");
+        //TeamMarker = hardwareMap.servo.get("TeamMarker");
 
         basketServo = hardwareMap.servo.get("basketServo");
         gateServo = hardwareMap.servo.get("gateServo");
+
+        basketServo.setPosition(0.9);
+        gateServo.setPosition(0.65);
 
         //Intake
         //Commented out until Trollbot has an intake
@@ -95,7 +99,6 @@ public class TeleOpMode extends OpMode{
         time.reset();
         mostRecentBPress = 0;
         mostRecentAPress = 0;
-
 
 
     }
@@ -111,23 +114,27 @@ public class TeleOpMode extends OpMode{
         // Drive-train:
 
         if (Math.abs(gamepad1.left_stick_y) > .1) {
+            telemetry.addData("Left Power", gamepad1.left_stick_y * halfSpeed);
             FL.setPower(gamepad1.left_stick_y * halfSpeed);
             BL.setPower(gamepad1.left_stick_y * halfSpeed);
         } else {
+            telemetry.addData("Left Power", 0);
             FL.setPower(0);
             BL.setPower(0);
         }
 
 
         if (Math.abs(gamepad1.right_stick_y) > .1) {
+            telemetry.addData("Right Power", gamepad1.right_stick_y * halfSpeed);
             FR.setPower(-gamepad1.right_stick_y * halfSpeed);
             BR.setPower(-gamepad1.right_stick_y * halfSpeed);
         } else {
+            telemetry.addData("Right Power", 0);
             FR.setPower(0);
             BR.setPower(0);
         }
 
-        if (time.milliseconds() - mostRecentBPress > 100) {
+        if (time.milliseconds() - mostRecentBPress > 250) {
             if (gamepad1.b && (halfSpeed == 1)) {
                 halfSpeed = 0.5;
             } else if ((gamepad1.b) && (halfSpeed == 0.5)) {
@@ -136,13 +143,28 @@ public class TeleOpMode extends OpMode{
             mostRecentBPress = time.milliseconds();
         }
 
+        if (halfSpeed == 0.5){
+            telemetry.addData("Half Speed", "True");
+        }
+        else{
+            telemetry.addData("Half Speed", "False");
+        }
+
         if (gamepad2.right_trigger > 0.1){
             middleIntake.setPower(-0.65);
             outerIntake.setPower(-0.65);
         }
+        else if (gamepad2.right_bumper){
+            middleIntake.setPower(-0.65);
+            outerIntake.setPower(0);
+        }
         else if (gamepad2.left_trigger > 0.1){
             middleIntake.setPower(0.65);
             outerIntake.setPower(0.65);
+        }
+        else if (gamepad2.left_bumper){
+            middleIntake.setPower(0.65);
+            outerIntake.setPower(0);
         }
         else{
             middleIntake.setPower(0);
@@ -172,14 +194,35 @@ public class TeleOpMode extends OpMode{
 
         if (gamepad2.b && gateServoPositionDown && time.milliseconds() - mostRecentAPress > 250){
             gateServoPositionDown = false;
-            gateServo.setPosition(0.7);
+            gateServo.setPosition(0.25);
             mostRecentAPress = time.milliseconds();
         }
         else if (gamepad2.b && !gateServoPositionDown && time.milliseconds() - mostRecentAPress > 250){
             gateServoPositionDown = true;
-            gateServo.setPosition(0.3);
+            gateServo.setPosition(0.65);
             mostRecentAPress = time.milliseconds();
         }
+        if (gamepad2.y){
+            basketServoPositionDown = true;
+            basketServo.setPosition(0.9);
+            gateServoPositionDown = true;
+            gateServo.setPosition(0.65);
+        }
+        if (gamepad2.x){
+            gateServoPositionDown = false;
+            gateServo.setPosition(0.25);
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            basketServoPositionDown = false;
+            basketServo.setPosition(0.4);
+
+        }
+
+        telemetry.addData("Gate Down", gateServoPositionDown);
+        telemetry.addData("Basket Down", basketServoPositionDown);
 
         // Intake:
 
@@ -202,9 +245,6 @@ public class TeleOpMode extends OpMode{
 
 
 
-    //TODO: Add controls for the intake motor (UPDATE: created, but needs HW Map)
 
-    //TODO: Potentially add a half-speed for the drive train
-    // Slackhub test
 }
 

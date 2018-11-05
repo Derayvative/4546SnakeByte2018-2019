@@ -24,4 +24,6 @@ public final class RobotConstants {
 
     public static final double[] MINERAL_CIELAB_VALUES_FAR = {200, 200, 200};
 
+    public static final int BUTTON_DELAY_TOGGLE = 250;
+
 }

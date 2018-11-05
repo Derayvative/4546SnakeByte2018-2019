@@ -18,9 +18,12 @@ public class TurningTest extends AutoOpMode {
         //vuforiaInit();
         initialize();
         waitForStart();
-
-        turnToPosition(-60);
-        turnToPosition(-90);
-        turnToPosition(-120);
+        pLeftTurn(90);
+        sleep(1000);
+        pLeftTurnTest(90);
+        sleep(1000);
+        pLeftTurn(90);
+        sleep(1000);
+        pLeftTurnTest(45);
     }
 }
