@@ -226,7 +226,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         if (currentGyro <= -160 && previousGyro > 160){
             gyroMultiplier++;
         }
-        return gyroMultiplier * 360 + getGyroYaw();
+        return gyroMultiplier * 360 + getGyroYaw() - 90;
     }
 
     //TODO: Create basic methods to set all motors to a certain power + stop the motors
