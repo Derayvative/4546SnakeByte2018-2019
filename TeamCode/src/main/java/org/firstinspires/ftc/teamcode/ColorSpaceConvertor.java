@@ -99,7 +99,7 @@ public final class ColorSpaceConvertor {
         double CIE_a = 500 * (X - Y);
         double CIE_b = 200 * (Y - Z);
 
-        double[] CIELAB = {CIE_L, CIE_a, CIE_b};
+        double[] CIELAB = {CIE_L * 100.0 / 360.0, CIE_a * 200.0 / 360.0 - 100, CIE_b * 200.0 / 360.0 - 100};
 
         return CIELAB;
     }

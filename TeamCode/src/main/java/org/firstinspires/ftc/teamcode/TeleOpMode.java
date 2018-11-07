@@ -151,19 +151,19 @@ public class TeleOpMode extends OpMode{
         }
 
         if (gamepad2.right_trigger > 0.1){
-            middleIntake.setPower(-0.65);
-            outerIntake.setPower(-0.65);
+            middleIntake.setPower(-0.75);
+            outerIntake.setPower(-0.75);
         }
         else if (gamepad2.right_bumper){
-            middleIntake.setPower(-0.65);
+            middleIntake.setPower(-0.75);
             outerIntake.setPower(0);
         }
         else if (gamepad2.left_trigger > 0.1){
-            middleIntake.setPower(0.65);
-            outerIntake.setPower(0.65);
+            middleIntake.setPower(0.75);
+            outerIntake.setPower(0.75);
         }
         else if (gamepad2.left_bumper){
-            middleIntake.setPower(0.65);
+            middleIntake.setPower(0.75);
             outerIntake.setPower(0);
         }
         else{
@@ -171,11 +171,11 @@ public class TeleOpMode extends OpMode{
             outerIntake.setPower(0);
         }
 
-        if (gamepad2.right_stick_y > 0.1){
-            lift.setPower(gamepad2.right_stick_y);
+        if (gamepad2.left_stick_y > 0.1){
+            lift.setPower(gamepad2.left_stick_y);
         }
-        else if (gamepad2.right_stick_y < -0.1){
-            lift.setPower(gamepad2.right_stick_y);
+        else if (gamepad2.left_stick_y < -0.1){
+            lift.setPower(gamepad2.left_stick_y);
         }
         else{
             lift.setPower(0);
@@ -183,6 +183,16 @@ public class TeleOpMode extends OpMode{
 
         if (gamepad2.a && basketServoPositionDown && time.milliseconds() - mostRecentAPress > 250){
             basketServoPositionDown = false;
+            /*
+            for (double i = 0.9; i >= 0.4; i -= 0.1){
+                basketServo.setPosition(i);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            */
             basketServo.setPosition(0.4);
             mostRecentAPress = time.milliseconds();
         }

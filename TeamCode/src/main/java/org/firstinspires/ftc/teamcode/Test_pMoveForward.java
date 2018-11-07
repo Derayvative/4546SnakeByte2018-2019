@@ -9,8 +9,12 @@ public class Test_pMoveForward extends AutoOpMode {
     public void runOpMode() throws InterruptedException{
         initialize();
         waitForStart();
-        pMoveForward(1000);
-        sleep(1000);
-        pMoveForward(1000);
+        while (opModeIsActive()){
+            telemetry.addData("FL",FL.getCurrentPosition());
+            telemetry.addData("FL",FR.getCurrentPosition());
+            telemetry.addData("FL",BL.getCurrentPosition());
+            telemetry.addData("FL",BR.getCurrentPosition());
+            telemetry.update();
+        }
     }
 }
