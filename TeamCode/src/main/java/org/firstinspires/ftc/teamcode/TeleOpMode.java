@@ -151,19 +151,19 @@ public class TeleOpMode extends OpMode{
         }
 
         if (gamepad2.right_trigger > 0.1){
-            middleIntake.setPower(-0.75);
-            outerIntake.setPower(-0.75);
+            middleIntake.setPower(-1);
+            outerIntake.setPower(-1);
         }
         else if (gamepad2.right_bumper){
-            middleIntake.setPower(-0.75);
+            middleIntake.setPower(-1);
             outerIntake.setPower(0);
         }
         else if (gamepad2.left_trigger > 0.1){
-            middleIntake.setPower(0.75);
-            outerIntake.setPower(0.75);
+            middleIntake.setPower(1);
+            outerIntake.setPower(1);
         }
         else if (gamepad2.left_bumper){
-            middleIntake.setPower(0.75);
+            middleIntake.setPower(1);
             outerIntake.setPower(0);
         }
         else{

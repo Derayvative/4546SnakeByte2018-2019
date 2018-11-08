@@ -59,6 +59,7 @@ public abstract class AutoOpMode extends LinearOpMode{
     double currentGyro;
     double previousGyro;
     int gyroMultiplier;
+    double offset = -90;
 
     ColorSensor CS;
     DistanceSensor DS;
@@ -226,7 +227,7 @@ public abstract class AutoOpMode extends LinearOpMode{
         if (currentGyro <= -160 && previousGyro > 160){
             gyroMultiplier++;
         }
-        return gyroMultiplier * 360 + getGyroYaw() - 90;
+        return gyroMultiplier * 360 + getGyroYaw() + offset;
     }
 
     //TODO: Create basic methods to set all motors to a certain power + stop the motors
@@ -435,7 +436,7 @@ public abstract class AutoOpMode extends LinearOpMode{
                 power = 0.4;
             }
             telemetry.addData("Turn Power: ", power);
-            turnR(power * 0.8);
+            turnR(power * 0.9);
             speedUp = (time.milliseconds() - startTime) * 0.07 / 1000;
             if (time.milliseconds() - startTime > 5000){
                 break;
@@ -475,7 +476,7 @@ public abstract class AutoOpMode extends LinearOpMode{
                 power = 0.4;
             }
             telemetry.addData("Turn value: ", power);
-            turn(power * 0.8);
+            turn(power * 0.9);
             //if (time.milliseconds() - startTime >= 1000) {
                 speedUp = (time.milliseconds() - startTime) * 0.07 / 1000;
           //  }
@@ -738,6 +739,54 @@ public abstract class AutoOpMode extends LinearOpMode{
         double currentTime = System.currentTimeMillis();
         double pastTime;
         double desired = getFunctionalGyroYaw();
+        double time = 0;
+        double numCalcs = 0;
+        double riemannSumError = 0;
+        double initialPower = 0.14;
+        while (Math.abs(getRangeReading() - rangeCM) > 3 && opModeIsActive()){
+            double error = getRangeReading() - rangeCM;
+            double correctionalTurn = simpleStraighten(desired, 0.02);
+            telemetry.addData("Error", error);
+            pastTime = currentTime;
+            currentTime = System.currentTimeMillis();
+            double deltaT = currentTime - pastTime;
+            time += deltaT;
+            telemetry.addData("Time", time / 1000.0);
+            numCalcs++;
+            telemetry.addData("Count", numCalcs);
+            riemannSumError += deltaT * (error);
+            telemetry.addData("I Term", riemannSumError * kI);
+            //setPower(error * 0.23/70 + riemannSumError * kI);
+            double pTerm = kP * Math.abs(error);
+            telemetry.addData("PTerm", pTerm);
+            if (pTerm > 0.35){
+                pTerm = 0.35;
+            }
+
+            if (error > 0){
+                setPowerAndTurn(0 + pTerm + time / 1000 * 0.075 + 0.06, correctionalTurn);
+            }
+            else if (error < 0){
+                setPowerAndTurn(-0 - pTerm - time / 1000 * 0.075 - 0.06, correctionalTurn);
+            }
+            if (time > 3500){
+                return;
+            }
+            telemetry.addData("Range", getRangeReading());
+            telemetry.update();
+            idle();
+        }
+        telemetry.addData("RangeMotion", "Complete");
+        telemetry.update();
+        setPower(0);
+    }
+
+    public void moveToRangeBasic(double rangeCM, double angle) throws InterruptedException {
+        double kP = 0.23/50;
+        double kI = 0.0000012;
+        double currentTime = System.currentTimeMillis();
+        double pastTime;
+        double desired = angle;
         double time = 0;
         double numCalcs = 0;
         double riemannSumError = 0;
