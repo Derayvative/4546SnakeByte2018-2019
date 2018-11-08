@@ -34,9 +34,9 @@ public class CentralPointFinder extends AutoOpMode {
             telemetry.update();
         }
         if (target.equals("LEFT")){
-            turnToPosition(-33);
-            turnToPosition(-33);
-            setPower(0.35);
+            turnToPosition(-23);
+            turnToPosition(-23);
+            setPower(0.2);
             sleep(1500);
             moveToRangeBasic(15);
             sleep(500);
@@ -45,7 +45,7 @@ public class CentralPointFinder extends AutoOpMode {
             moveToRangeBasic(20, 45);
             dropTeamMarker();
             turnToPosition(55);
-            setPower(-0.45);
+            setPower(-0.2);
             sleep(10000);
         }
         else if (target.equals("MIDDLE")){
@@ -74,10 +74,21 @@ public class CentralPointFinder extends AutoOpMode {
 
         }
         else if (target.equals("RIGHT")){
-            turnToPosition(-150);
-            turnToPosition(-150);
-            setPower(-0.35);
-            sleep(4000);
+            turnToPosition(0);
+            turnToPosition(40);
+            turnToPosition(40);
+            setPower(-0.2);
+            sleep(3000);
+            moveToRangeBasic(12);
+            turnToPosition(-45);
+            turnToPosition(-45);
+            moveToRangeBasic(12);
+            turnToPosition(48);
+            dropTeamMarker();
+
+            sleep(200);
+            glideAgainstWallMovingBack();
+
             /*
             turnToPosition(0);
             turnToPosition(50);
