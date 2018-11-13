@@ -781,6 +781,30 @@ public abstract class AutoOpMode extends LinearOpMode{
         setPower(0);
     }
 
+    public void moveEncoderDistancePI(int distance) throws InterruptedException{
+        int start = Math.abs(getAvgEncoder());
+        double kp = .23/5000;
+        double ki = .0000012;
+        double realtime = 0;
+        double change;
+        double past = 0;
+        double integral;
+        double error = 0;
+        while (Math.abs(getAvgEncoder()) - start < distance && opModeIsActive())
+        {
+            past = System.currentTimeMillis();
+            change = (System.currentTimeMillis() - past);
+            telemetry.addData("Change in time", change);
+            realtime += change;
+            error += (Math.abs(getAvgEncoder()) - start) * change;
+            integral = error * ki;
+            setPower((Math.abs(distance - getAvgEncoder()) * kp + .05) + integral );
+
+        }
+        setZero();
+
+    }
+
     public void moveToRangeBasic(double rangeCM, double angle) throws InterruptedException {
         double kP = 0.23/50;
         double kI = 0.0000012;
